@@ -226,6 +226,13 @@ class Map {
 		return b > 53 || b == Constants.IT_EMPTY;
 	}
 
+	// solid brick for missiles and traces: TBrick.block, except the invisible "empty" brick 37 (NFK clears it on the border)
+	isShotBlock(col, row) {
+		if (col <= 0 || row <= 0 || col >= this.rows - 1 || row >= this.cols - 1)
+			return true;
+		return this.bricks[col][row] > 53;
+	}
+
 	// water or lava brick (IsWaterContent() in NFK)
 	isWater(col, row) {
 		if (col < 0 || row < 0 || col >= this.rows || row >= this.cols)

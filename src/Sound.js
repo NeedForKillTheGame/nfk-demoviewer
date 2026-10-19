@@ -16,6 +16,8 @@ var sound_defs = {
 
 
 	expl:	new Howl({ urls: ['sounds/expl.wav'] }),
+	bounce:	new Howl({ urls: ['sounds/BOUNCE.WAV'] }),
+	damage3:	new Howl({ urls: ['sounds/DAMAGE3.WAV'] }),
 	fire_bfg:	new Howl({ urls: ['sounds/bfg_fire.wav'] }),
 	fire_plasma:	new Howl({ urls: ['sounds/plasma.wav'] }),
 	fire_gren:	new Howl({ urls: ['sounds/grenade.wav'] }),
@@ -26,7 +28,7 @@ var sound_defs = {
 	fire_shotgun:	new Howl({ urls: ['sounds/shotgun.wav'] }),
 	fire_mach:	new Howl({ urls: ['sounds/machine.wav'] }),
 	fire_rocket:	new Howl({ urls: ['sounds/rocket.wav'] }),
-	fire_gauntl0:	new Howl({ urls: ['sounds/gauntl_r1.wavv'] }),
+	fire_gauntl0:	new Howl({ urls: ['sounds/gauntl_r1.wav'] }),
 	fire_gauntl1:	new Howl({ urls: ['sounds/gauntl_r2.wav'] }),
 	fire_gauntl2:	new Howl({ urls: ['sounds/gauntl_a.wav'] }),
 	

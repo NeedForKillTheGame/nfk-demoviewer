@@ -5,6 +5,7 @@ import Sound from "./Sound.js";
 import ScreenLabels from "./ScreenLabels.js";
 import PlayerModel from "./objects/PlayerModel.js";
 import TimerManager from "./TimerManager.js";
+import Weapons from "./Weapons.js";
 
 
 
@@ -22,6 +23,8 @@ class Global {
 		this.demo = new Demo(this);
 		// objects on the map
 		this.objects = [];
+		// missiles, traces and explosions
+		this.weapons = new Weapons(this);
 
 		// timers
 		this.timerManager = new TimerManager();
@@ -47,6 +50,7 @@ class Global {
 			mode: process.env.NODE_ENV, // 'devemopment' or 'production', depends on running enviroment
 			volume: 0.1,
 			default_bg: 2,
+			netCoordInterpolate: 0.85, // net_coordinterpolate of NFK: smooth movement of demo players, 0 = draw the exact positions
 			mech: false, // rectangle for objects
 			brickMech: false // rectangle for bricks
 		}

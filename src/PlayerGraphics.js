@@ -8,7 +8,7 @@ export default
 class PlayerGraphics  {
     constructor(g, player) {
 		this.g = g;
-		this.stage = g.render.stage;
+		this.stage = g.render.playersLayer;
 		this.player = player;
 	
 		//this.playerGraphics = new PIXI.Graphics();
@@ -109,13 +109,13 @@ class PlayerGraphics  {
 
 		// player with a flag
 		if (this.player.flag) {
-			this.player.flag.setY(this.player.y);
+			this.player.flag.setY(this.player.testY);
 			if (this.player.dir == Constants.DIR_RW || this.player.dir == Constants.DIR_RS) {
-				this.player.flag.setX(this.player.x - 20);
+				this.player.flag.setX(this.player.testX - 20);
 				this.player.flag.sprite.scale.x = -1;
 				this.player.flag.sprite.angle = -45;
 			} else {
-				this.player.flag.setX(this.player.x + 20);
+				this.player.flag.setX(this.player.testX + 20);
 				this.player.flag.sprite.scale.x = 1;
 				this.player.flag.sprite.angle = 45;
 			}

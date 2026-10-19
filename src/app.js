@@ -91,7 +91,8 @@ async function init()
 
 	var gametic = 0;
 
-	// one game tick of NFK (1/50 sec): physics of players, then the demo frames of this tick, like DXTimerTimer
+	// one game tick of NFK (1/50 sec) in the order of DXTimerTimer: physics of players, objects under the players,
+	// players, missiles, explosions and shots, then the demo frames of this tick
 	function gameTick() {
 		for (var i = 0; i < G.players.length; i++)
 		{
@@ -100,6 +101,7 @@ async function init()
 
 			// player physics
 			G.players[i].physics.playermove();
+			G.players[i].weaponTick();
 
 			// handle objects collisions with a player
 			for (var k = 0; k < G.objects.length; k++) {
@@ -107,13 +109,13 @@ async function init()
 			}
 		}
 
-		for (var i = 0; i < G.map.brickObjects.length; i++)
-		{
-			// handle objects collisions with a brick
-			for (var k = 0; k < G.objects.length; k++) {
-				G.objects[k].handleBrickCollisions(G.map.brickObjects[i]);
-			}
+		G.weapons.removeDead();
+		G.weapons.tick(0);
+		for (var i = 0; i < G.players.length; i++) {
+			G.players[i].updateTestPredict(G.config.netCoordInterpolate);
 		}
+		G.weapons.tick(1);
+		G.weapons.tick(2);
 
 		// if end of demo then return from the function (it will stop infinite loop)
 		//if ( !G.demo.nextFrame(gametic) )

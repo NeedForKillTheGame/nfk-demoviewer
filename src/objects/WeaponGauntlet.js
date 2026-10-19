@@ -1,12 +1,7 @@
-import GameObject from "./GameObject.js";
 import Constants from "../Constants.js";
-import Sound from "../Sound.js";
 import Weapon from "./Weapon.js";
-import Bullet from "./Bullet.js";
 
-// object which can move on the direction and traectory
-// when reach a player OR a brick then fires event (explosion, damage)
-// Here could be all weapon bullets, including rail, machine (speed = 100 = immediate)
+// gauntlet animates while it attacks, its sound is played by Player.weaponTick()
 export default
 class WeaponGauntlet extends Weapon  {
 	constructor(g, player) {
@@ -22,12 +17,5 @@ class WeaponGauntlet extends Weapon  {
 		this.frameEnd = 3;
 		this.container = player.graphics.container;
 		this.offsetX = -8;
-	}
-
-	// state = 0 | 1 | 2 (2 = attack?)
-	use(state) {
-		this.play();
-		console.log(state);
-		Sound.play('fire_gauntl' + state);
 	}
 }

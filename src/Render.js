@@ -39,6 +39,12 @@ class Render {
 		this.mapGraphics.lineStyle(1, 0xAAAAAA);
 		this.stage.addChild(this.mapGraphics);
 
+		// players are drawn over the map objects and the smoke, missiles and explosions are drawn over the players
+		this.playersLayer = new PIXI.Container();
+		this.stage.addChild(this.playersLayer);
+		this.fxLayer = new PIXI.Container();
+		this.stage.addChild(this.fxLayer);
+
 		this.floatCamera = false;
 		this.halfWidth = 0;
 		this.halfHeight = 0;
@@ -51,7 +57,9 @@ class Render {
 		this.bricksPerLineCustom = 0;
 
 		this.slider = new Slider(this, function(val){ 
-			// slider change event
+			// slider change event, the missiles of the previous position are removed when the demo is rewound
+			if (val != that.g.demo.getFrameId())
+				that.g.weapons.clear();
 			that.g.demo.setFrameId(val); 
 		}, function(frameId){ 
 			//console.log(frameId);
@@ -221,8 +229,9 @@ class Render {
 		var mapHeight = this.map.getRows() * Constants.BRICK_HEIGHT;
 
 		this.floatCamera = mapWidth > viewWidth || mapHeight > viewHeight;
-		this.mapDx = this.mapGraphics.x = cameraOffset(viewWidth, mapWidth, target && target.x);
-		this.mapDy = this.mapGraphics.y = cameraOffset(viewHeight, mapHeight, target && target.y);
+		// NFK follows a network player by its smoothed position
+		this.mapDx = this.fxLayer.x = this.mapGraphics.x = cameraOffset(viewWidth, mapWidth, target && target.testX);
+		this.mapDy = this.fxLayer.y = this.mapGraphics.y = cameraOffset(viewHeight, mapHeight, target && target.testY);
 	}
 
 
@@ -231,8 +240,8 @@ class Render {
 		if (player.isSpectator())
 			return;
 
-		// position of a player on the map
-		player.graphics.adjustPosition(player.x + this.mapDx, player.y + this.mapDy);
+		// position of a player on the map, NFK draws a network player at the smoothed position
+		player.graphics.adjustPosition(player.testX + this.mapDx, player.testY + this.mapDy);
 	}
 
 	renderLabels() {

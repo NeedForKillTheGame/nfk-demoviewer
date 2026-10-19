@@ -48,6 +48,20 @@ class Player {
         
 		this.rewardtime = 0; //?
 		this.fangle = 0; // angle of weapon
+		this.nfkAngle = 0; // weapon angle 0..255 of NFK (fixed by the direction)
+
+		// position where NFK draws a network (and demo) player: it follows x,y smoothly (TESTPREDICT_X/Y)
+		this.testX = 0.0;
+		this.testY = 0.0;
+
+		// weapon state of NFK
+		this.shaft_state = 0;
+		this.shaftsttime = 0;
+		this.shaftframe = 0;
+		this.gantl_state = 0;
+		this.gantl_s = 0;
+		this.gauntl_s_order = 0;
+		this.item_quad_time = 0;
 		
 		
 		this.ammo_mg = 100; 
@@ -234,6 +248,72 @@ class Player {
     setXY(newX, newY) {
         this.x = newX;
         this.y = newY;
+        this.testX = newX;
+        this.testY = newY;
+    }
+
+    hasPowerup(itemId) {
+        return this.powerups.indexOf(itemId) != -1;
+    }
+
+    // weapon angle of a demo position (wpnang 0..255), fixed like in NFK demo playback
+    setWeaponAngle(wpnang) {
+        this.nfkAngle = wpnang;
+        if (this.dir == Constants.DIR_RW || this.dir == Constants.DIR_RS) {
+            if (this.nfkAngle > 0x7F) this.nfkAngle = 0xFF - this.nfkAngle;
+        } else {
+            if (this.nfkAngle <= 0x7F) this.nfkAngle = 0xFF - this.nfkAngle;
+        }
+    }
+
+    spinMachinegun() {
+        // resume weapon animation
+        var machinegun = this.weapons[Constants.C_WPN_MACHINE];
+        if (machinegun.sprite)
+            machinegun.sprite.play();
+    }
+
+    // timers of a network player in playermove() of NFK and its gauntlet sound
+    weaponTick() {
+        if (this.shaftsttime > 0) this.shaftsttime--;
+        if (this.gantl_s > 0) this.gantl_s--;
+        if (this.item_quad_time > 0) this.item_quad_time--;
+
+        if (this.weapon.itemId == Constants.C_WPN_GAUNTLET && this.gantl_state > 0) {
+            // FireGauntlet(): rotor sound every 12 ticks
+            if (this.gantl_s == 0) {
+                Sound.play(this.gauntl_s_order == 0 ? 'fire_gauntl0' : 'fire_gauntl1');
+                this.gauntl_s_order = this.gauntl_s_order == 0 ? 1 : 0;
+                this.gantl_s = 12;
+            }
+            this.gantl_state++;
+            if (this.gantl_state > 3) this.gantl_state = 1;
+            this.gantl_state++;
+            if (this.gantl_state > 3) this.gantl_state = 1;
+        }
+    }
+
+    // PlayerAnim() of NFK for a network player: TESTPREDICT moves to x,y by a part of the distance each tick
+    updateTestPredict(coordInterpolate) {
+        if (coordInterpolate <= 0) {
+            this.testX = this.x;
+            this.testY = this.y;
+            return;
+        }
+        var p = Math.fround(coordInterpolate); // net_coordinterpolate is "single"
+        var d = Math.abs(this.testX - this.x);
+        var i = Utils.trunc(Math.abs(d * (p / 2.5) - d * p));
+        if (Utils.trunc(this.testX) != Utils.trunc(this.x) && i == 0) i = 1;
+        this.testX = this.testX < this.x ? this.testX + i : this.testX - i;
+
+        d = Math.abs(this.testY - this.y);
+        i = Utils.trunc(Math.abs(d * (p / 3) - d * p));
+        if (Utils.trunc(this.testY) != Utils.trunc(this.y) && i == 0) i = 1;
+        this.testY = this.testY < this.y ? this.testY + i : this.testY - i;
+
+        // TOO BIG ERROR!
+        if (Math.abs(Utils.trunc(this.x - this.testX)) >= 32) this.testX = this.x;
+        if (Math.abs(Utils.trunc(this.y - this.testY)) >= 16) this.testY = this.y;
     }
 
     addPowerup(itemId) {

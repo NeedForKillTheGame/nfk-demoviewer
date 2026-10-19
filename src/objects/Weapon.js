@@ -1,6 +1,5 @@
 import GameObject from "./GameObject.js";
 import Constants from "../Constants.js";
-import Bullet from "./Bullet.js";
 
 
 // object which can move on the direction and traectory
@@ -17,7 +16,6 @@ class Weapon extends GameObject {
 		this.offsetY = -6;
 
 		// properties
-		this.bullet = ''; // bullet class name
 		this.ammo = 0; // current
 		this.maxAmmo = 0; // max
 	}
@@ -39,23 +37,4 @@ class Weapon extends GameObject {
 	handleCollisions(player, callback) {
 		return false;
 	}
-
-	// plasma, rocket, bfg
-	fire(x, y, inertialX, inertialY) {
-		if (!this.newBullet)
-			return;
-		var bullet = this.newBullet(x, y, inertialX, inertialY);
-		//console.log("fire ", x, y, inertialX, inertialY);
-		bullet.spawn();
-	}
-
-	// other weaapons which already have destination (cx, cy)
-	fireVector(x, y, cx, cy, inertialX, inertialY) {
-		if (!this.newBullet)
-			return;
-		var bullet = this.newBullet(x, y, cx, cy, inertialX, inertialY);
-		//console.log("vector fire ", x, y, cx, cy, inertialX, inertialY);
-		bullet.spawn();
-	}
 }
-

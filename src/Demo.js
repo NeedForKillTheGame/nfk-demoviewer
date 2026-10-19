@@ -125,6 +125,7 @@ class Demo {
 
 				// spawn objects only it match started (otherwise warmup will be > 0)
 				if (demounit.warmup == 0) {
+					this.g.weapons.clear();
 					Sound.play('matchstart');
 					this.g.map.spawnObjects();
 				}
@@ -166,6 +167,7 @@ class Demo {
 							this.players[k].graphics.play();
 						
 						if ((this.players[k].dead > 0) && ((demounit.PUV3 & Constants.PUV3_DEAD0)==Constants.PUV3_DEAD0) && (this.players[k].rewardtime>0)) this.players[k].rewardtime = 0;
+						this.players[k].setWeaponAngle(demounit.wpnang);
 						this.players[k].fangle = demounit.wpnang * (180/128); // given angle is from 0 to 255, we convert it to 360 degrees notation
 
 						// fix angle for the right and left sides
@@ -348,62 +350,73 @@ class Demo {
 				break;
 
 			
-			// FIXME: hit player, it is not a death
+			// a missile exploded
 			case Constants.DDEMO_KILLOBJECT:
-				//
+				this.g.weapons.killObject(demounit);
 				break;
 
-			case Constants.DDEMO_FIREBFG:
 			case Constants.DDEMO_FIREROCKET:
-			case Constants.DDEMO_FIREPLASMAV2:
-				for (var i = 0; i < this.players.length; i++) {
-					if (this.players[i].DXID == demounit.spawnerDxid) {
-						this.players[i].weapon.fire(demounit.x, demounit.y, demounit.inertiax, demounit.inertiay);
-					}
-				}
+				this.g.weapons.fireRocket(demounit, false);
 				break;
-
+			case Constants.DDEMO_FIREBFG:
+				this.g.weapons.fireRocket(demounit, true);
+				break;
+			case Constants.DDEMO_FIREPLASMA:
+			case Constants.DDEMO_FIREPLASMAV2:
+				this.g.weapons.firePlasma(demounit);
+				break;
 			case Constants.DDEMO_FIREGREN:
+			case Constants.DDEMO_FIREGRENV2:
+				this.g.weapons.fireGrenade(demounit);
+				break;
+			case Constants.DDEMO_GRENADESYNC:
+				this.g.weapons.grenadeSync(demounit);
+				break;
 			case Constants.DDEMO_FIRERAIL:
+				this.g.weapons.fireRail(demounit);
+				break;
+			case Constants.DDEMO_NETRAIL:
+				this.g.weapons.netRail(demounit);
+				break;
+			case Constants.DDEMO_FIRESHAFT:
+				this.g.weapons.fireShaftLegacy(demounit);
+				break;
 			case Constants.DDEMO_FIRESHOTGUN:
+				this.g.weapons.fireShotgun(demounit);
+				break;
 			case Constants.DDEMO_FIREMACH:
-				for (var i = 0; i < this.players.length; i++) {
-					if (this.players[i].DXID == demounit.spawnerDxid) {
-						this.players[i].weapon.fireVector(demounit.x, demounit.y, demounit.cx, demounit.cy, demounit.inertiax, demounit.inertiay);
-					}
-				}
+				this.g.weapons.fireMachine(demounit);
+				break;
+			case Constants.DDEMO_NETPARTICLE:
+				this.g.weapons.netParticle(demounit);
+				break;
+			case Constants.DDEMO_REMOTEFIRE:
+				// the demo parser does not return this frame yet
+				if (demounit)
+					this.g.weapons.remoteFire(demounit);
 				break;
 			
 			// gauntlet attack or not
 			case Constants.DDEMO_GAUNTLETSTATE:
 				for (var i = 0; i < this.players.length; i++) {
 					if (this.players[i].DXID == demounit.DXID) {
-						console.log(demounit.State);
-						if (demounit.State == 0)
-							this.players[i].weapon.stop();
-						else {
-							if (this.players[i].weapon.use) {
-								this.players[i].weapon.use(demounit.State);
-							}
+						this.players[i].gantl_state = demounit.State;
+						if (this.players[i].weapon.itemId == Constants.C_WPN_GAUNTLET) {
+							if (demounit.State == 0)
+								this.players[i].weapon.stop();
+							else
+								this.players[i].weapon.play();
 						}
 					}
 				}
 				break;
 
 			case Constants.DDEMO_NEW_SHAFTBEGIN:
-				for (var i = 0; i < this.players.length; i++) {
-					if (this.players[i].DXID == demounit.DXID) {
-						this.players[i].weapon.fire(demounit.AMMO);
-					}
-				}
+				this.g.weapons.shaftBegin(demounit);
 				break;
 
 			case Constants.DDEMO_NEW_SHAFTEND:
-				for (var i = 0; i < this.players.length; i++) {
-					if (this.players[i].DXID == demounit.DXID) {
-						this.players[i].weapon.stop();
-					}
-				}
+				this.g.weapons.shaftEnd(demounit);
 				break;
 				
 			case Constants.DDEMO_JUMPSOUND:

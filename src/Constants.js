@@ -175,6 +175,7 @@ export default {
 	DDEMO_POWERUP_EVENT_POWERUPDROP: 77,
 	DDEMO_POWERUP_EVENT_PICKUP: 78,
 	DDEMO_POWERUP_EVENT_POWERUPDROPGAMESTATE: 79,
+	DDEMO_REMOTEFIRE: 80, // 0.77: machinegun/shotgun of a network player in a client demo
 
 	// conn: additional demo ctf events
 	DDEMO_CTF_EVENT_FLAGTAKEN_RED     : 80,
