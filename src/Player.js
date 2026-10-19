@@ -198,10 +198,25 @@ class Player {
         this.powerups = [];
     }
 
+	// a player without a team in team based game types is a spectator
+	isSpectator() {
+		var map = this.g.demo.data.Map;
+		if (!map)
+			return false;
+		var gametype = map.Header.GAMETYPE;
+		var teamGame = gametype === Constants.GAMETYPE_TEAM
+			|| gametype === Constants.GAMETYPE_CTF
+			|| gametype === Constants.GAMETYPE_DOMINATION;
+		return teamGame && this.team === Constants.C_TEAMNON;
+	}
+
 	changeTeam(team){
 		console.log("player " + this.name + " selected team " + team);
 		this.team = team;
-        
+		this.graphics.container.visible = !this.isSpectator();
+		if (this.isSpectator())
+			this.follow = false;
+
         this.setModel(this.model, team == Constants.C_TEAMRED 
             ? 'red'
             : team == Constants.C_TEAMBLUE

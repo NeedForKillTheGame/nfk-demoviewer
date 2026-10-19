@@ -163,10 +163,9 @@ class PlayerGraphics  {
 	
 	
 	destroy() {
-		this.stage.removeChild(this.obj);
-		this.stage.removeChild(this.playerCenter);
-		this.stage.removeChild(this.playerName);
-		this.stage.removeChild(this.playerHA);
+		this.stage.removeChild(this.container);
+		this.container.destroy({ children: true });
 		this.stage.removeChild(this.mech);
+		this.mech.destroy();
 	}
 }

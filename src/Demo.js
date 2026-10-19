@@ -208,6 +208,9 @@ class Demo {
 			case Constants.DDEMO_CREATEPLAYERV2:
 				var name = demounit.netname;
 				var p = this.spawnPlayer(demounit.DXID, name);
+				p.setXY(demounit.x, demounit.y);
+				p.dir = demounit.dir;
+				p.dead = demounit.dead;
 				console.log(demounit);
 				var model = demounit.modelname.split('+');
 				p.setModel(model[0], model[1]);

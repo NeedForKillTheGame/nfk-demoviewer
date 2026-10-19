@@ -4,6 +4,14 @@ import Map from "./Map.js";
 import Utils from "./Utils.js";
 import Slider from "./Slider.js";
 
+// offset of the map inside the view: center it if it fits, otherwise follow the target and clamp to the map edges
+function cameraOffset(viewSize, mapSize, target) {
+	if (mapSize <= viewSize)
+		return Math.floor((viewSize - mapSize) / 2);
+	const pos = Number.isFinite(target) ? target : mapSize / 2;
+	return Math.max(viewSize - mapSize, Math.min(0, viewSize / 2 - pos));
+}
+
 export default
 class Render {
 	constructor(g) {
@@ -11,7 +19,15 @@ class Render {
 		this.map = g.map;
 		var that = this;
 
-		this.app = new PIXI.Application(window.innerWidth, window.innerHeight, { antialias: false, resolution: 1, transparent: true});
+		// PIXI v5 accepts only an options object, (width, height, options) arguments are silently ignored
+		this.app = new PIXI.Application({
+			width: Math.max(1, window.innerWidth - 20),
+			height: Math.max(1, window.innerHeight),
+			autoStart: false, // the stage is rendered manually in the game loop
+			antialias: false,
+			resolution: 1,
+			transparent: true
+		});
 		this.app.view.style.display = "block";
 		var gameEl = document.getElementById('game');
 		gameEl.appendChild(this.app.view);
@@ -68,20 +84,15 @@ class Render {
 			if (that.slider.onmousedown(e))
 				return;
 
-			// follow next player
-			var followId = -1;
-			for (var i = 0; i < that.g.players.length; i++) {
-				if (that.g.players[i].follow) {
-					that.g.players[i].follow = false;
-					followId = i + 1;
-					if (followId > that.g.players.length - 1)
-						followId = 0;
-				}
-			}
-			if (followId == -1)
+			// follow next player (spectators are skipped)
+			var players = that.g.players.filter(p => !p.isSpectator());
+			if (!players.length)
 				return;
-			that.g.players[followId].follow = true;
-			console.log('Follow player ' + that.g.players[followId].displayName);
+			var followId = players.findIndex(p => p.follow);
+			that.g.players.forEach(p => p.follow = false);
+			var next = players[(followId + 1) % players.length];
+			next.follow = true;
+			console.log('Follow player ' + next.displayName);
 		};
 
 		gameEl.addEventListener("touchstart", gameEl.onmousedown, false);
@@ -186,43 +197,42 @@ class Render {
 	// when browser size changed this event fixes the map view
 	recalcFloatCamera(render) {
 		console.log("resize event");
-		
-		render.app.view.width = window.innerWidth - 20;
-		render.app.view.height = window.innerHeight;
 
-		render.floatCamera = render.map.getRows() > (window.innerHeight) / 16 || (render.map.getCols() > (window.innerWidth - 20) / 32);
-		if (render.floatCamera) {
-			render.halfWidth = Math.floor((window.innerWidth - 20) / 2);
-			render.halfHeight = Math.floor((window.innerHeight) / 2);
+		// resize through the renderer, otherwise WebGL keeps drawing into the initial viewport and the screen is cut off
+		render.app.renderer.resize(Math.max(1, window.innerWidth - 20), Math.max(1, window.innerHeight));
+		render.updateCamera();
 
-		} else {
-			render.mapGraphics.x = render.mapDx = Math.floor(((window.innerWidth - 20) - render.map.getCols() * 32) / 2);
-			render.mapGraphics.y = render.mapDy = Math.floor(((window.innerHeight) - render.map.getRows() * 16) / 2);
-		}
-		
 		// update slider
 		this.slider.resize(render);
 	}
 
+	// update map position depending on the following player
+	updateCamera() {
+		var players = this.g.players.filter(p => !p.isSpectator());
+		var target = players.find(p => p.follow);
+		if (!target && players.length) {
+			target = players[0];
+			target.follow = true;
+		}
+
+		var viewWidth = this.app.screen.width;
+		var viewHeight = this.app.screen.height;
+		var mapWidth = this.map.getCols() * Constants.BRICK_WIDTH;
+		var mapHeight = this.map.getRows() * Constants.BRICK_HEIGHT;
+
+		this.floatCamera = mapWidth > viewWidth || mapHeight > viewHeight;
+		this.mapDx = this.mapGraphics.x = cameraOffset(viewWidth, mapWidth, target && target.x);
+		this.mapDy = this.mapGraphics.y = cameraOffset(viewHeight, mapHeight, target && target.y);
+	}
+
 
 	renderGame(player) {
-				
-		// position of a player on the map
-		var tmpX = player.x + this.mapDx;
-		var tmpY = player.y + this.mapDy;
-		
-		if (this.floatCamera) {
-			if (player.follow)
-			{
-				// update map position depending on the following player 
-				this.mapDx = this.mapGraphics.x = this.halfWidth - player.x;
-				this.mapDy = this.mapGraphics.y = this.halfHeight - player.y; 
-			}
-		}
-		
-		player.graphics.adjustPosition(tmpX, tmpY);
+		player.graphics.container.visible = !player.isSpectator();
+		if (player.isSpectator())
+			return;
 
-		this.app.render(this.stage);
+		// position of a player on the map
+		player.graphics.adjustPosition(player.x + this.mapDx, player.y + this.mapDy);
 	}
 
 	renderLabels() {

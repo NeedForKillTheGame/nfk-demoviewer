@@ -64,8 +64,8 @@ function run(loader, resources) {
 	G.resources = resources;
 	
 	// load demo
-	if (G.config.mode == 'development') {
-		G.demo.load("demo2.json", init); // for debug load local demo
+	if (G.config.mode == 'development' && !window.location.search) {
+		G.demo.load("demo.json", init); // for debug load local demo
 	} else {
 		G.demo.loadFromQuery(init); // for production
 	}
@@ -104,10 +104,11 @@ async function init()
 		{
 			for (var i = 0; i < G.players.length; i++)
 			{
+				if (G.players[i].isSpectator())
+					continue;
+
 				// player physics
 				G.players[i].physics.updateGame(timestamp);
-				// player graphics
-				G.render.renderGame(G.players[i]);
 
 				// handle objects collisions with a player
 				for (var k = 0; k < G.objects.length; k++) {
@@ -140,8 +141,15 @@ async function init()
 
 			G.timerManager.tick();
 		}
+
+		// player graphics (after physics of all players, so the camera follows the actual position)
+		G.render.updateCamera();
+		for (var i = 0; i < G.players.length; i++) {
+			G.render.renderGame(G.players[i]);
+		}
 		G.render.renderLabels();
-		
+		G.render.app.render();
+
 		requestAnimationFrame(gameLoop); //infinite render loop
 		
 		stats.end();
