@@ -130,8 +130,13 @@ async function init()
 		G.demo.nextFrame(gametic);
 		
 		// this must be after G.demo.nextFrame(), to handle gametic = 0
-		if (++gametic >= Constants.FPS)
+		if (++gametic >= Constants.FPS) {
 			gametic = 0;
+			// a game second: powerups wear off
+			for (var i = 0; i < G.players.length; i++) {
+				G.players[i].powerupSecond();
+			}
+		}
 
 		G.timerManager.tick();
 	}

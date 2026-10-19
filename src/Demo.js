@@ -261,8 +261,18 @@ class Demo {
 				{
 					if (demounit.DXID == this.players[k].DXID)
 					{
-						this.players[k].health = demounit.health;
-						Sound.playPain(this.players[k]);
+						var p = this.players[k];
+						// battle suit protects
+						if (p.item_battle > 0 && p.item_battle_time == 0) {
+							Sound.play('protect');
+							p.item_battle_time = 50;
+						}
+						p.health = demounit.health;
+						p.armor = demounit.armor;
+						// powerups are lost on the death
+						if (p.health <= 0)
+							p.clearPowerups();
+						Sound.playPain(p);
 					}
 				}
 				break;
@@ -324,7 +334,10 @@ class Demo {
 				
 				
 			case Constants.DDEMO_EARNPOWERUP:
-
+				for (var k = 0; k < this.players.length; k++) {
+					if (demounit.DXID == this.players[k].DXID)
+						this.players[k].setPowerup(demounit.type1, demounit.time);
+				}
 				break;
 				
 			case Constants.DDEMO_CHATMESSAGE:
@@ -441,14 +454,36 @@ class Demo {
 				Sound.play('lava');
 				break;
 
-			// spawn powerup
+			// a powerup will appear in a second
 			case Constants.DDEMO_POWERUPSOUND:
-				for (var o in this.g.objects) {
-					// find powerup in spawned objects and set it visible
-					if (this.g.objects[o].x == demounit.x && this.g.objects[o].y == demounit.y) {
-						this.g.objects[o].show();
-					}
-				}
+				Sound.play('powerup');
+				break;
+
+			// map items are taken and respawned only by the demo
+			case Constants.DDEMO_ITEMDISSAPEAR:
+				this.g.map.takeItem(demounit.x, demounit.y, demounit.i);
+				break;
+			case Constants.DDEMO_ITEMAPEAR:
+				this.g.map.respawnItem(demounit.x, demounit.y);
+				break;
+
+			// weapons and powerups dropped by players
+			case Constants.DDEMO_WPN_EVENT_WEAPONDROP:
+			case Constants.DDEMO_WPN_EVENT_WEAPONDROPGAMESTATE:
+				this.g.weapons.dropWeapon(demounit, unit.DData.type0 == Constants.DDEMO_WPN_EVENT_WEAPONDROPGAMESTATE);
+				break;
+			case Constants.DDEMO_WPN_EVENT_WEAPONDROP_APPLY:
+				this.g.weapons.dropApply(demounit);
+				break;
+			case Constants.DDEMO_WPN_EVENT_PICKUP:
+				this.g.weapons.pickupWeapon(demounit);
+				break;
+			case Constants.DDEMO_POWERUP_EVENT_POWERUPDROP:
+			case Constants.DDEMO_POWERUP_EVENT_POWERUPDROPGAMESTATE:
+				this.g.weapons.dropPowerup(demounit);
+				break;
+			case Constants.DDEMO_POWERUP_EVENT_PICKUP:
+				this.g.weapons.pickupPowerup(demounit);
 				break;
 			case Constants.DDEMO_FLIGHTSOUND:
 				Sound.play('flight');

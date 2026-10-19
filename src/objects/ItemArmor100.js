@@ -1,5 +1,4 @@
 import SimpleObject from "./SimpleObject.js";
-import Sound from "./../Sound.js";
 import Constants from "./../Constants.js";
 
 export default
@@ -16,16 +15,5 @@ class ItemArmor100 extends SimpleObject {
 
 		// properties
 		this.itemId = Constants.IT_RED_ARMOR;
-		this.respawnTime = 30;
-		this.armor = 100;
-	}
-
-	handleCollisions(player) {
-		var that = this;
-		super.handleCollisions(player, function(player){
-			player.addArmor(that.armor);
-			Sound.play("armor");
-			return true;
-		});
 	}
 }

@@ -92,7 +92,11 @@ class Player {
         // init graphics, physics
         this._init();
 
-        this.powerups = []; // taken powerups
+        // powerups: seconds left (item_quad etc. in NFK), set by DDEMO_EARNPOWERUP
+        this.clearPowerups();
+        this.item_regen_time = 0; // red flash after the regeneration
+        this.item_battle_time = 0; // battle suit protection sound interval
+        this.item_haste_time = 0; // haste smoke interval
         
         this.weapons = [
             new WeaponGauntlet(this.g, this),
@@ -151,26 +155,6 @@ class Player {
         this.graphics.updateModel();
     }
 		
-	addHealth(val, max) {
-		this.health += val;
-		if (this.health > max)
-			this.health = max;
-		if (this.health <= 0)
-			this.setDead(1);
-	}		
-	addArmor(val) {
-		this.admor += val;
-		if (this.admor > 200)
-			this.admor = 200;
-	}
-	
-	addWeapon(weaponId) {
-		
-	}
-	
-	addWeaponAmmo(ammoId, amount) {
-		
-	}
 	setWeapon(weaponId) {
         // TODO: switch weapon only if exists
         for (var w in this.weapons) {
@@ -206,20 +190,21 @@ class Player {
             // TODO: make flag physics so it can move onto the floor itself
             this.flag = null;
         }
-        // clear powerups
-        this.powerups = [];
     }
 
 	// a player without a team in team based game types is a spectator
 	isSpectator() {
+		return this.isTeamGame() && this.team === Constants.C_TEAMNON;
+	}
+
+	isTeamGame() {
 		var map = this.g.demo.data.Map;
 		if (!map)
 			return false;
 		var gametype = map.Header.GAMETYPE;
-		var teamGame = gametype === Constants.GAMETYPE_TEAM
+		return gametype === Constants.GAMETYPE_TEAM
 			|| gametype === Constants.GAMETYPE_CTF
 			|| gametype === Constants.GAMETYPE_DOMINATION;
-		return teamGame && this.team === Constants.C_TEAMNON;
 	}
 
 	changeTeam(team){
@@ -253,7 +238,64 @@ class Player {
     }
 
     hasPowerup(itemId) {
-        return this.powerups.indexOf(itemId) != -1;
+        switch (itemId) {
+            case Constants.IT_POWERUP_REGENERATION: return this.item_regen > 0;
+            case Constants.IT_POWERUP_BATTLESUIT: return this.item_battle > 0;
+            case Constants.IT_POWERUP_HASTE: return this.item_haste > 0;
+            case Constants.IT_POWERUP_QUAD: return this.item_quad > 0;
+            case Constants.IT_POWERUP_FLIGHT: return this.item_flight > 0;
+            case Constants.IT_POWERUP_INVISIBILITY: return this.item_invis > 0;
+        }
+        return false;
+    }
+
+    clearPowerups() {
+        this.item_quad = 0;
+        this.item_regen = 0;
+        this.item_battle = 0;
+        this.item_flight = 0;
+        this.item_haste = 0;
+        this.item_invis = 0;
+    }
+
+    // DDEMO_EARNPOWERUP: type 1 regen, 2 flight, 3 battle, 4 haste, 5 quad, 6 invis
+    setPowerup(type, time) {
+        switch (type) {
+            case 1: this.item_regen = time; break;
+            case 2: this.item_flight = time; break;
+            case 3: this.item_battle = time; break;
+            case 4: this.item_haste = time; break;
+            case 5: this.item_quad = time; break;
+            case 6: this.item_invis = time; break;
+        }
+    }
+
+    // POWERUP_GainPowerup(): a dropped powerup is picked up, index 0 regen, 1 battle, 2 haste, 3 quad, 4 flight, 5 invis
+    gainPowerup(index, amount) {
+        switch (index) {
+            case 0: this.item_regen = amount; Sound.play('powerup_regen'); break;
+            case 1: this.item_battle = amount; Sound.play('powerup_battle'); break;
+            case 2: this.item_haste = amount; Sound.play('powerup_haste'); break;
+            case 3: this.item_quad = amount; Sound.play('powerup_quad'); break;
+            case 4: this.item_flight = amount; Sound.play('powerup_flight'); break;
+            case 5: this.item_invis = amount; Sound.play('powerup_invis'); break;
+        }
+    }
+
+    // every game second of a demo: powerups wear off, the regeneration sound
+    powerupSecond() {
+        if (this.dead != 0)
+            return;
+        if (this.item_regen > 0 && this.health < 200) {
+            Sound.play('regen');
+            this.item_regen_time = 15;
+        }
+        if (this.item_quad > 0) this.item_quad--;
+        if (this.item_regen > 0) this.item_regen--;
+        if (this.item_flight > 0) this.item_flight--;
+        if (this.item_invis > 0) this.item_invis--;
+        if (this.item_battle > 0) this.item_battle--;
+        if (this.item_haste > 0) this.item_haste--;
     }
 
     // weapon angle of a demo position (wpnang 0..255), fixed like in NFK demo playback
@@ -278,6 +320,16 @@ class Player {
         if (this.shaftsttime > 0) this.shaftsttime--;
         if (this.gantl_s > 0) this.gantl_s--;
         if (this.item_quad_time > 0) this.item_quad_time--;
+        if (this.item_regen_time > 0) this.item_regen_time--;
+        if (this.item_battle_time > 0) this.item_battle_time--;
+        if (this.item_haste > 0) {
+            if (this.item_haste_time == 0) {
+                this.g.weapons.spawnSmoke(Utils.round(this.x), Utils.round(this.y + 20));
+                this.item_haste_time = 5;
+            } else {
+                this.item_haste_time--;
+            }
+        }
 
         if (this.weapon.itemId == Constants.C_WPN_GAUNTLET && this.gantl_state > 0) {
             // FireGauntlet(): rotor sound every 12 ticks
@@ -314,26 +366,6 @@ class Player {
         // TOO BIG ERROR!
         if (Math.abs(Utils.trunc(this.x - this.testX)) >= 32) this.testX = this.x;
         if (Math.abs(Utils.trunc(this.y - this.testY)) >= 16) this.testY = this.y;
-    }
-
-    addPowerup(itemId) {
-        // add only if does not exists
-        if (this.powerups.indexOf(itemId) == -1) {
-            this.powerups.push(itemId);
-            var idx = this.powerups.length - 1;
-
-            // remove after 30 seconds
-            // FIXME: actually powerup has own time, but here each time it will last again 30 sec...
-            var that = this;
-            var timerId = this.g.timerManager.addTimeout(30, function(){
-                for (var i = 0; i < that.powerups.length; i++) {
-                    if (that.powerups[i] == itemId) {
-                        that.powerups.splice(i, 1);
-                        break;
-                    }
-                }
-            });
-        }
     }
 
     jump() {

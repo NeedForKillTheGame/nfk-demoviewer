@@ -667,4 +667,113 @@ export class ShaftBeam extends Missile {
 	}
 }
 
+// powerup sprites by the index of a dropped powerup (Images[70+dir] in NFK)
+var POWERUP_ANIMATIONS = ['regen', 'battle', 'haste', 'quad', 'fly', 'invis'];
+
+// weapon or powerup dropped by a killed player: it falls by its own physics in a demo
+// (WPN_ProcessWeaponPhysics, POWERUP_ProcessPowerupPhysics) and is picked up by DDEMO_WPN_EVENT_PICKUP, DDEMO_POWERUP_EVENT_PICKUP
+export class DroppedItem extends Missile {
+	// weapon: imageindex = weapon id, powerup: dir = powerup index, imageindex = seconds
+	constructor(g, powerup, DXID, x, y, inertiaX, inertiaY, dir, imageindex) {
+		super(g, 1);
+		this.powerup = powerup;
+		this.DXID = DXID;
+		this.x = x;
+		this.y = y;
+		this.inertiaX = inertiaX;
+		this.inertiaY = inertiaY;
+		this.dir = dir;
+		this.imageindex = imageindex;
+		this.mass = 5;
+		this.health = 50 * 60 + 50 * 10; // one minute. + 10 sec.. (cuz networked removal).
+
+		if (powerup) {
+			this.sprite = new PIXI.AnimatedSprite(g.resources.powerup.spritesheet.animations[POWERUP_ANIMATIONS[dir]]);
+			this.sprite.anchor.set(0.5);
+			this.sprite.animationSpeed = 0.26; // a frame per 64 ms
+			this.sprite.play();
+			this.container().addChild(this.sprite);
+			this.sprites.push(this.sprite);
+		} else {
+			// the items sheet: frame imageindex - 1
+			this.sprite = this.addSprite(g.resources.items.textures['item-' + (imageindex - 2) + '.png']);
+		}
+	}
+
+	tick() {
+		var map = this.g.map;
+
+		// killed by lava, or death (a weapon in a demo is not)
+		if (this.powerup) {
+			var content = map.bricks[trunc(this.x / 32)] && map.bricks[trunc(this.x / 32)][trunc(this.y / 16)];
+			if (content == Constants.IT_LAVA || content == Constants.IT_DEATH)
+				this.health = 0;
+		}
+
+		// timed out, removing..
+		if (this.health > 0)
+			this.health--;
+		else
+			this.dead = 2;
+
+		this.physics();
+
+		// RotateEffectFix(.., x, y - 6, 65 or mirrored 64, ..)
+		this.draw(this.sprite, trunc(this.x), trunc(this.y) - 6, this.powerup || this.dir == 1 ? 65 : 64, 256);
+		if (!this.powerup && this.dir == 0)
+			this.sprite.scale.x = -1;
+	}
+
+	isBlock(x, y) {
+		return this.g.map.isBlock(trunc(x / 32), trunc(y / 16));
+	}
+
+	physics() {
+		if (this.inertiaY == 0 && this.inertiaX == 0)
+			return;
+
+		if (this.inertiaY > -0.3 && this.inertiaY < 0.3 && this.inertiaX > -0.3 && this.inertiaX < 0.3 && this.isBlock(this.x, this.y + 2)) {
+			this.inertiaX = 0;
+			return;
+		}
+
+		this.inertiaY = this.inertiaY + 0.02 * this.mass; // Gravity*mass
+
+		if (this.inertiaY < 0)
+			this.inertiaY = this.inertiaY / 1.025; // stopspeed.
+		this.inertiaX = this.inertiaX / 1.003; // stopspeed.
+
+		this.x = this.x + this.inertiaX;
+		this.y = this.y + this.inertiaY;
+
+		// CLIPPING
+		if (this.isBlock(this.x - 7, this.y) || this.isBlock(this.x + 7, this.y))
+			this.inertiaX = 0;
+		if (this.isBlock(this.x, this.y - 12)) { // boom ceil
+			if (this.inertiaY < 0) this.inertiaY = Math.abs(this.inertiaY);
+			this.inertiaX = this.inertiaX / 1.07; // GRENADE_SLOWSPEED
+		}
+		if (this.isBlock(this.x, this.y)) { // boom floor
+			this.y = trunc(round(this.y) / 16) * 16 - 1; // correcting to floor.
+			this.inertiaY = 0;
+			this.inertiaX = 0;
+		}
+
+		if (this.inertiaY < -5) this.inertiaY = -5;
+		if (this.inertiaY > 5) this.inertiaY = 5;
+		if (this.inertiaX < -7) this.inertiaX = -7;
+		if (this.inertiaX > 7) this.inertiaX = 7;
+
+		if (this.inertiaX < 0.01 && this.inertiaX > -0.01 && this.onBrick()) this.inertiaX = 0;
+		if (this.inertiaY < 0.02 && this.inertiaY > -0.02 && this.onBrick()) this.inertiaY = 0;
+	}
+
+	// onbrick_flag()
+	onBrick() {
+		return !this.isBlock(this.x - 4, this.y) && this.isSolid(this.x - 4, this.y + 4)
+			|| !this.isBlock(this.x + 4, this.y) && this.isSolid(this.x + 4, this.y + 4)
+			|| this.isSolid(this.x, this.y);
+	}
+}
+
 export { cosTable, sinTable, angleIndex };

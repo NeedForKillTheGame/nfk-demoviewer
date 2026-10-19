@@ -39,6 +39,10 @@ var sound_defs = {
 	powerup_quad:	new Howl({ urls: ['sounds/quaddamage.wav'] }),
 	powerup_regen:	new Howl({ urls: ['sounds/regeneration.wav'] }),
 	powerup_battle:	new Howl({ urls: ['sounds/holdable.wav'] }),
+	powerup_flight:	new Howl({ urls: ['sounds/flight.wav'] }),
+	regen:	new Howl({ urls: ['sounds/regen.wav'] }),
+	protect:	new Howl({ urls: ['sounds/protect3.wav'] }),
+	error:	new Howl({ urls: ['sounds/Error.wav'] }),
 
 	// flag events
 	flagtk:	new Howl({ urls: ['sounds/flagtk.wav'] }),

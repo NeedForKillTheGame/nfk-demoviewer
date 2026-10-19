@@ -2,6 +2,7 @@
 import Constants from "./Constants.js";
 import Console from "./Console.js";
 import Utils from "./Utils.js";
+import Sound from "./Sound.js";
 
 import ItemMedkit5 from "./objects/ItemMedkit5.js";
 import ItemMedkit25 from "./objects/ItemMedkit25.js";
@@ -43,6 +44,7 @@ class Map {
 
 		this.specialObjects = [];
 		this.specialInstances = []; // objects of specialObjects by the index (ddd[] in NFK)
+		this.items = {}; // items by the brick
 		this.doorBlocks = {}; // bricks of closed doors
 		this.respawns = [];
 		this.bg = 1; // background id
@@ -197,6 +199,8 @@ class Map {
 		// spawn all objects
 		for (var i = 0; i < this.g.objects.length; i++) {
 			this.g.objects[i].spawn();
+			if (this.g.objects[i].appear)
+				this.items[this.g.objects[i].col * 256 + this.g.objects[i].row] = this.g.objects[i];
 		}
 		console.log("spawned " + this.g.objects.length + " objects");
 	}
@@ -207,6 +211,7 @@ class Map {
 		}
 		this.g.objects = [];
 		this.specialInstances = [];
+		this.items = {};
 		this.doorBlocks = {};
 		console.log("destroy objects");
 	}
@@ -239,6 +244,36 @@ class Map {
 			this.doorBlocks[col * 256 + row] = true;
 		else
 			delete this.doorBlocks[col * 256 + row];
+	}
+
+	// DDEMO_ITEMDISSAPEAR: Item_Dissapear() plays the pickup sound of the item index, the item disappears
+	takeItem(col, row, index) {
+		if (index >= 1 && index <= 7 || index == 29 || index == 30) Sound.play('wpkup');
+		else if (index >= 8 && index <= 15) Sound.play('ammopkup');
+		else if (index == 16) Sound.play('shard');
+		else if (index == 17 || index == 18) Sound.play('armor');
+		else if (index == 19) Sound.play('health5');
+		else if (index == 20) Sound.play('health25');
+		else if (index == 21) Sound.play('health50');
+		else if (index == 22) Sound.play('health100');
+		else if (index == 23) Sound.play('powerup_regen');
+		else if (index == 24) Sound.play('powerup_battle');
+		else if (index == 25) Sound.play('powerup_haste');
+		else if (index == 26) Sound.play('powerup_quad');
+		else if (index == 27) Sound.play('powerup_flight');
+		else if (index == 28) Sound.play('powerup_invis');
+		else Sound.play('error');
+
+		var item = this.items[col * 256 + row];
+		if (item)
+			item.disappear();
+	}
+
+	// DDEMO_ITEMAPEAR
+	respawnItem(col, row) {
+		var item = this.items[col * 256 + row];
+		if (item)
+			item.appear();
 	}
 
 	// DDEMO_OBJCHANGESTATE: a door or a button changed its state

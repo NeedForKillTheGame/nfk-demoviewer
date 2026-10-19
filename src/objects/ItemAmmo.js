@@ -1,5 +1,4 @@
 import SimpleObject from "./SimpleObject.js";
-import Sound from "./../Sound.js";
 import Constants from "./../Constants.js";
 
 /*
@@ -17,7 +16,6 @@ TODO:
 
 Если берёшь пушку в её месте, а у тебя она уже есть, то патронов добавляется до уровня "При подборе", если берёшь пушку с трупа, то патронов прибавляется на уровень "При подборе". Если берёшь патроны до того, как взял пушку и в совокупности патронов взято меньше, чем при подборе пушки, то дополняется до уровня "При подборе", иначе - до уровня сколько взял в сумме патронов. Мг не выпадает с трупа. Время респов айтемов: мега - 60, Броня - 30, рейл - 30, аптечка +50 - 30, шафт - 40. Всё остальное  - 20.
 
-
 */
 
 export default
@@ -30,17 +28,5 @@ class ItemAmmo extends SimpleObject {
 
 		// properties
 		this.itemId = itemId;
-		this.ammo = ammo;
-		this.respawnTime = 30;
-	}
-
-	handleCollisions(player) {
-		var that = this;
-		super.handleCollisions(player, function(player){
-			player.addWeaponAmmo(this.itemId, this.ammo);
-			Sound.play("ammopkup");
-			that.sprite.visible = false;
-			return true;
-		});
 	}
 }

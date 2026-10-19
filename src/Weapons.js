@@ -1,6 +1,6 @@
 import Constants from "./Constants.js";
 import Sound from "./Sound.js";
-import { Rocket, Plasma, Grenade, RailTrail, Shot, Particle, ShaftBeam, cosTable, sinTable, angleIndex } from "./Missiles.js";
+import { Rocket, Plasma, Grenade, RailTrail, Shot, Smoke, Particle, ShaftBeam, DroppedItem, cosTable, sinTable, angleIndex } from "./Missiles.js";
 
 // Weapon events of a demo, ported from the demo playback of NFK 0.77: DEMOPLAREC() calls Fire*() procedures
 // (FireRocket, FireGren, ...), which in MATCH_DDEMOPLAY take the recorded missile instead of the player aim.
@@ -227,6 +227,69 @@ class Weapons {
 		var p = this.findPlayer(d.DXID);
 		if (p)
 			p.shaft_state = 0;
+	}
+
+	// smoke of rockets and the haste powerup (SpawnSmoke)
+	spawnSmoke(x, y) {
+		this.add(new Smoke(this.g, x, y));
+	}
+
+	findDropped(DXID, powerup) {
+		for (var i = 0; i < this.missiles.length; i++) {
+			var m = this.missiles[i];
+			if (m.dead == 0 && m instanceof DroppedItem && m.powerup == powerup && m.DXID == DXID)
+				return m;
+		}
+		return null;
+	}
+
+	// DDEMO_WPN_EVENT_WEAPONDROP, DDEMO_WPN_EVENT_WEAPONDROPGAMESTATE: WPN_DEMO_DropWeapon()
+	dropWeapon(d, gamestate) {
+		var dir = Math.floor(Math.random() * 2);
+		if (!gamestate) {
+			var p = this.findPlayer(d.DropperDXID);
+			dir = p && (p.dir == Constants.DIR_LW || p.dir == Constants.DIR_LS) ? 0 : 1;
+		}
+		this.add(new DroppedItem(this.g, false, d.DXID, d.X, d.Y, d.Inertiax, d.Inertiay, dir, d.WeaponID));
+	}
+
+	// DDEMO_WPN_EVENT_WEAPONDROP_APPLY: the dropped weapon lies at the recorded point
+	dropApply(d) {
+		var m = this.findDropped(d.DXID, false);
+		if (!m)
+			return;
+		m.x = d.X;
+		m.y = d.Y;
+		m.inertiaX = 0;
+		m.inertiaY = 0;
+	}
+
+	// DDEMO_WPN_EVENT_PICKUP
+	pickupWeapon(d) {
+		if (!this.findPlayer(d.PlayerDXID))
+			return;
+		var m = this.findDropped(d.FlagDXID, false);
+		if (!m)
+			return;
+		m.dead = 2;
+		Sound.play('wpkup');
+	}
+
+	// DDEMO_POWERUP_EVENT_POWERUPDROP, DDEMO_POWERUP_EVENT_POWERUPDROPGAMESTATE: POWERUP_DEMO_DropPowerup()
+	dropPowerup(d) {
+		this.add(new DroppedItem(this.g, true, d.DXID, d.X, d.Y, d.Inertiax, d.Inertiay, d.dir, d.imageindex));
+	}
+
+	// DDEMO_POWERUP_EVENT_PICKUP: the player gets the rest of the powerup time
+	pickupPowerup(d) {
+		var p = this.findPlayer(d.PlayerDXID);
+		if (!p)
+			return;
+		var m = this.findDropped(d.FlagDXID, true);
+		if (!m)
+			return;
+		p.gainPowerup(m.dir, m.imageindex);
+		m.dead = 2;
 	}
 
 	// DDEMO_FIRESHAFT (old demo): FireShaft(), dir = length of the beam
