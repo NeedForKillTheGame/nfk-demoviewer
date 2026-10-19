@@ -1,9 +1,9 @@
 import Map from "./Map.js";
+import Constants from "./Constants.js";
 import Demo from "./Demo.js";
 import Render from "./Render.js";
 import Sound from "./Sound.js";
 import ScreenLabels from "./ScreenLabels.js";
-import PlayerModel from "./objects/PlayerModel.js";
 import TimerManager from "./TimerManager.js";
 import Weapons from "./Weapons.js";
 
@@ -38,6 +38,7 @@ class Global {
 			gametic: 0,
 			paused: false,
 			gameend: false,
+			speeddemo: 20, // demo speed of NFK 0..40, 20 = normal, the viewer goes faster up to 52
 
 			redscore: 0,
 			bluescore: 0
@@ -59,62 +60,12 @@ class Global {
 		Sound.setVolume(this.config.volume);
 	}
 
-	initPlayerModels(container) {
-		// don't forget to add model to "Sound.js"
-		// and resources to app.js / PIXI.loader()
-		return {
-			'sarge': {
-				'default':	this.getPlayerModels(container, 'sarge', 'd'),
-				'red':		this.getPlayerModels(container, 'sarge', 'r'),
-				'blue':		this.getPlayerModels(container, 'sarge', 'b'),
-				'nuker':	this.getPlayerModels(container, 'sarge', 'nuker'),
-				'white':	this.getPlayerModels(container, 'sarge', 'white'),
-				'yellow':	this.getPlayerModels(container, 'sarge', 'bn'),
-				'dark':		this.getPlayerModels(container, 'sarge', 'dk'),
-			},
-			'keel': {
-				'default': 	this.getPlayerModels(container, 'keel', 'd'),
-				'red': 		this.getPlayerModels(container, 'keel', 'r'),
-				'blue': 	this.getPlayerModels(container, 'keel', 'b'),
-				'nuker': 	this.getPlayerModels(container, 'keel', 'n'),
-				'white': 	this.getPlayerModels(container, 'keel', 'white1'),
-				'yellow':	this.getPlayerModels(container, 'keel', 'y'),
-				'dark':		this.getPlayerModels(container, 'keel', 'dk'),
-			},
-			'xaero': {
-				'default':	this.getPlayerModels(container, 'xaero', 'd'),
-				'red':		this.getPlayerModels(container, 'xaero', 'r'),
-				'blue':		this.getPlayerModels(container, 'xaero', 'b'),
-				'silver':	this.getPlayerModels(container, 'xaero', 's'),
-				'white':	this.getPlayerModels(container, 'xaero', 'w'),
-				'yellow':	this.getPlayerModels(container, 'xaero', 'y'),
-				'green':	this.getPlayerModels(container, 'xaero', 'g'),
-				'dark':		this.getPlayerModels(container, 'xaero', 'dk'),
-			},
-			'crashed': {
-				'default':	this.getPlayerModels(container, 'crashed', 'd'),
-				'red':		this.getPlayerModels(container, 'crashed', 'r'),
-				'blue':		this.getPlayerModels(container, 'crashed', 'b'),
-				'green':	this.getPlayerModels(container, 'crashed', 'g'),
-			},
-			'doom2': {
-				'default':	this.getPlayerModels(container, 'doom2', 'd'),
-				'red':		this.getPlayerModels(container, 'doom2', 'r'),
-				'blue':		this.getPlayerModels(container, 'doom2', 'b'),
-				'magenta':	this.getPlayerModels(container, 'doom2', 'm'),
-				'white':	this.getPlayerModels(container, 'doom2', 'w'),
-				'yellow':	this.getPlayerModels(container, 'doom2', 'y'),
-				'green':	this.getPlayerModels(container, 'doom2', 'g'),
-				'dark':		this.getPlayerModels(container, 'doom2', 'dk'),
-				'phobos':	this.getPlayerModels(container, 'doom2', 'p'),
-			}
-		};
-	}
-	getPlayerModels(container, model, color) {
-		return [
-			new PlayerModel(this, container, model, color, 'w'), // walk
-			new PlayerModel(this, container, model, color, 'c'), // crouch
-			new PlayerModel(this, container, model, color, 'd'), // death
-		];
+	// ticks per second of the demo playback (mainform.dxtimer.fps of NFK, x0.6..x2.2),
+	// faster speeds after the NFK maximum 40 are x3, x4, x6, x8, x12, x16
+	demoTicksPerSecond() {
+		var speeddemo = this.gamestate.speeddemo;
+		if (speeddemo > 40)
+			return Constants.FPS * [3, 4, 6, 8, 12, 16][(speeddemo - 42) / 2];
+		return speeddemo > 20 ? 30 + speeddemo * 2 : 30 + speeddemo;
 	}
 }

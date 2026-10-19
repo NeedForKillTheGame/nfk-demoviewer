@@ -34,6 +34,11 @@ class Render {
 		
 		this.stage = this.app.stage;
 
+		// map background is drawn in the frame like in NFK, so the additive effects (explosions, glow) add to it
+		// instead of leaving dark edges over the transparent canvas
+		this.background = new PIXI.TilingSprite(PIXI.Texture.EMPTY, this.app.screen.width, this.app.screen.height);
+		this.stage.addChild(this.background);
+
 		this.mapGraphics = new PIXI.Graphics();
 		this.mapGraphics.beginFill(0x999999);
 		this.mapGraphics.lineStyle(1, 0xAAAAAA);
@@ -126,6 +131,7 @@ class Render {
 
 	renderMap() {
 		document.body.style.background = "url('images/bg_" + this.map.bg + ".jpg')";
+		this.background.texture = PIXI.Texture.from('images/bg_' + this.map.bg + '.jpg');
 		var that = this;
 		this.g.map.destroyBrickObjects();
 
@@ -232,6 +238,11 @@ class Render {
 		// NFK follows a network player by its smoothed position
 		this.mapDx = this.fxLayer.x = this.mapGraphics.x = cameraOffset(viewWidth, mapWidth, target && target.testX);
 		this.mapDy = this.fxLayer.y = this.mapGraphics.y = cameraOffset(viewHeight, mapHeight, target && target.testY);
+
+		// 256x256 background tiles move with the map (bg_motion 0), NFK draws them from GX - 288, GY - 256
+		this.background.width = viewWidth;
+		this.background.height = viewHeight;
+		this.background.tilePosition.set(this.mapDx - 32, this.mapDy);
 	}
 
 

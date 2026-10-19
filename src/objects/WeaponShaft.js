@@ -11,8 +11,5 @@ class WeaponShaft extends Weapon  {
 		this.ammo = 10; // init ammo
 		this.maxAmmo = 50; // max ammo
 
-		// sprite
-		this.texture = g.resources.weapons.textures['weapons-' + (this.itemId - 2) + '.png'];
-		this.container = player.graphics.container;
 	}
 }

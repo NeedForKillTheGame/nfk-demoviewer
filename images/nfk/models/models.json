@@ -1,0 +1,3734 @@
+{
+	"arctic": {
+		"blue": {
+			"crouch": [
+				0,
+				96,
+				2015,
+				36
+			],
+			"crouchframes": 30,
+			"crouchpower": [
+				0,
+				180,
+				2015,
+				36
+			],
+			"crouchrefreshtime": 1,
+			"crouchsizex": 65,
+			"crouchsizey": 36,
+			"crouchstartframe": 2,
+			"die": [
+				0,
+				48,
+				2340,
+				48
+			],
+			"dieframerefreshtime": 1,
+			"dieframes": 45,
+			"diesizey": 48,
+			"framerefreshtime": 1,
+			"modelsizex": 52,
+			"walk": [
+				0,
+				0,
+				1872,
+				48
+			],
+			"walkframes": 35,
+			"walkpower": [
+				0,
+				132,
+				1872,
+				48
+			],
+			"walkstartframe": 8
+		},
+		"default": {
+			"crouch": [
+				0,
+				312,
+				2015,
+				36
+			],
+			"crouchframes": 30,
+			"crouchpower": [
+				0,
+				180,
+				2015,
+				36
+			],
+			"crouchrefreshtime": 1,
+			"crouchsizex": 65,
+			"crouchsizey": 36,
+			"crouchstartframe": 2,
+			"die": [
+				0,
+				264,
+				2340,
+				48
+			],
+			"dieframerefreshtime": 1,
+			"dieframes": 45,
+			"diesizey": 48,
+			"framerefreshtime": 1,
+			"modelsizex": 52,
+			"walk": [
+				0,
+				216,
+				1872,
+				48
+			],
+			"walkframes": 35,
+			"walkpower": [
+				0,
+				132,
+				1872,
+				48
+			],
+			"walkstartframe": 8
+		},
+		"red": {
+			"crouch": [
+				0,
+				444,
+				2015,
+				36
+			],
+			"crouchframes": 30,
+			"crouchpower": [
+				0,
+				180,
+				2015,
+				36
+			],
+			"crouchrefreshtime": 1,
+			"crouchsizex": 65,
+			"crouchsizey": 36,
+			"crouchstartframe": 2,
+			"die": [
+				0,
+				396,
+				2340,
+				48
+			],
+			"dieframerefreshtime": 1,
+			"dieframes": 45,
+			"diesizey": 48,
+			"framerefreshtime": 1,
+			"modelsizex": 52,
+			"walk": [
+				0,
+				348,
+				1872,
+				48
+			],
+			"walkframes": 35,
+			"walkpower": [
+				0,
+				132,
+				1872,
+				48
+			],
+			"walkstartframe": 8
+		}
+	},
+	"crashed": {
+		"blue": {
+			"crouch": [
+				0,
+				93,
+				714,
+				38
+			],
+			"crouchframes": 16,
+			"crouchpower": [
+				0,
+				179,
+				714,
+				38
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 42,
+			"crouchsizey": 38,
+			"crouchstartframe": 1,
+			"die": [
+				0,
+				48,
+				1248,
+				45
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 24,
+			"diesizey": 45,
+			"framerefreshtime": 2,
+			"modelsizex": 39,
+			"walk": [
+				0,
+				0,
+				702,
+				48
+			],
+			"walkframes": 17,
+			"walkpower": [
+				0,
+				131,
+				702,
+				48
+			],
+			"walkstartframe": 1
+		},
+		"default": {
+			"crouch": [
+				0,
+				310,
+				714,
+				38
+			],
+			"crouchframes": 16,
+			"crouchpower": [
+				0,
+				179,
+				714,
+				38
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 42,
+			"crouchsizey": 38,
+			"crouchstartframe": 1,
+			"die": [
+				0,
+				265,
+				1248,
+				45
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 24,
+			"diesizey": 45,
+			"framerefreshtime": 2,
+			"modelsizex": 39,
+			"walk": [
+				0,
+				217,
+				702,
+				48
+			],
+			"walkframes": 17,
+			"walkpower": [
+				0,
+				131,
+				702,
+				48
+			],
+			"walkstartframe": 1
+		},
+		"green": {
+			"crouch": [
+				0,
+				441,
+				714,
+				38
+			],
+			"crouchframes": 16,
+			"crouchpower": [
+				0,
+				179,
+				714,
+				38
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 42,
+			"crouchsizey": 38,
+			"crouchstartframe": 1,
+			"die": [
+				0,
+				396,
+				1248,
+				45
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 24,
+			"diesizey": 45,
+			"framerefreshtime": 2,
+			"modelsizex": 39,
+			"walk": [
+				0,
+				348,
+				702,
+				48
+			],
+			"walkframes": 17,
+			"walkpower": [
+				0,
+				131,
+				702,
+				48
+			],
+			"walkstartframe": 1
+		},
+		"red": {
+			"crouch": [
+				0,
+				572,
+				714,
+				38
+			],
+			"crouchframes": 16,
+			"crouchpower": [
+				0,
+				179,
+				714,
+				38
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 42,
+			"crouchsizey": 38,
+			"crouchstartframe": 1,
+			"die": [
+				0,
+				527,
+				1248,
+				45
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 24,
+			"diesizey": 45,
+			"framerefreshtime": 2,
+			"modelsizex": 39,
+			"walk": [
+				0,
+				479,
+				702,
+				48
+			],
+			"walkframes": 17,
+			"walkpower": [
+				0,
+				131,
+				702,
+				48
+			],
+			"walkstartframe": 1
+		}
+	},
+	"doom2": {
+		"blue": {
+			"crouch": [
+				0,
+				98,
+				748,
+				40
+			],
+			"crouchframes": 16,
+			"crouchpower": [
+				0,
+				186,
+				748,
+				40
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 44,
+			"crouchsizey": 40,
+			"crouchstartframe": 1,
+			"die": [
+				0,
+				48,
+				1248,
+				50
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 24,
+			"diesizey": 50,
+			"framerefreshtime": 2,
+			"modelsizex": 34,
+			"walk": [
+				0,
+				0,
+				714,
+				48
+			],
+			"walkframes": 20,
+			"walkpower": [
+				0,
+				138,
+				714,
+				48
+			],
+			"walkstartframe": 2
+		},
+		"dark": {
+			"crouch": [
+				0,
+				324,
+				748,
+				40
+			],
+			"crouchframes": 16,
+			"crouchpower": [
+				0,
+				186,
+				748,
+				40
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 44,
+			"crouchsizey": 40,
+			"crouchstartframe": 1,
+			"die": [
+				0,
+				274,
+				1248,
+				50
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 24,
+			"diesizey": 50,
+			"framerefreshtime": 2,
+			"modelsizex": 34,
+			"walk": [
+				0,
+				226,
+				714,
+				48
+			],
+			"walkframes": 20,
+			"walkpower": [
+				0,
+				138,
+				714,
+				48
+			],
+			"walkstartframe": 2
+		},
+		"default": {
+			"crouch": [
+				0,
+				462,
+				748,
+				40
+			],
+			"crouchframes": 16,
+			"crouchpower": [
+				0,
+				186,
+				748,
+				40
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 44,
+			"crouchsizey": 40,
+			"crouchstartframe": 1,
+			"die": [
+				0,
+				412,
+				1248,
+				50
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 24,
+			"diesizey": 50,
+			"framerefreshtime": 2,
+			"modelsizex": 34,
+			"walk": [
+				0,
+				364,
+				714,
+				48
+			],
+			"walkframes": 20,
+			"walkpower": [
+				0,
+				138,
+				714,
+				48
+			],
+			"walkstartframe": 2
+		},
+		"green": {
+			"crouch": [
+				0,
+				600,
+				748,
+				40
+			],
+			"crouchframes": 16,
+			"crouchpower": [
+				0,
+				186,
+				748,
+				40
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 44,
+			"crouchsizey": 40,
+			"crouchstartframe": 1,
+			"die": [
+				0,
+				550,
+				1248,
+				50
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 24,
+			"diesizey": 50,
+			"framerefreshtime": 2,
+			"modelsizex": 34,
+			"walk": [
+				0,
+				502,
+				714,
+				48
+			],
+			"walkframes": 20,
+			"walkpower": [
+				0,
+				138,
+				714,
+				48
+			],
+			"walkstartframe": 2
+		},
+		"magenta": {
+			"crouch": [
+				0,
+				738,
+				748,
+				40
+			],
+			"crouchframes": 16,
+			"crouchpower": [
+				0,
+				186,
+				748,
+				40
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 44,
+			"crouchsizey": 40,
+			"crouchstartframe": 1,
+			"die": [
+				0,
+				688,
+				1248,
+				50
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 24,
+			"diesizey": 50,
+			"framerefreshtime": 2,
+			"modelsizex": 34,
+			"walk": [
+				0,
+				640,
+				714,
+				48
+			],
+			"walkframes": 20,
+			"walkpower": [
+				0,
+				138,
+				714,
+				48
+			],
+			"walkstartframe": 2
+		},
+		"phobos": {
+			"crouch": [
+				0,
+				876,
+				748,
+				40
+			],
+			"crouchframes": 16,
+			"crouchpower": [
+				0,
+				186,
+				748,
+				40
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 44,
+			"crouchsizey": 40,
+			"crouchstartframe": 1,
+			"die": [
+				0,
+				826,
+				1248,
+				50
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 24,
+			"diesizey": 50,
+			"framerefreshtime": 2,
+			"modelsizex": 34,
+			"walk": [
+				0,
+				778,
+				714,
+				48
+			],
+			"walkframes": 20,
+			"walkpower": [
+				0,
+				138,
+				714,
+				48
+			],
+			"walkstartframe": 2
+		},
+		"red": {
+			"crouch": [
+				0,
+				1014,
+				748,
+				40
+			],
+			"crouchframes": 16,
+			"crouchpower": [
+				0,
+				186,
+				748,
+				40
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 44,
+			"crouchsizey": 40,
+			"crouchstartframe": 1,
+			"die": [
+				0,
+				964,
+				1248,
+				50
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 24,
+			"diesizey": 50,
+			"framerefreshtime": 2,
+			"modelsizex": 34,
+			"walk": [
+				0,
+				916,
+				714,
+				48
+			],
+			"walkframes": 20,
+			"walkpower": [
+				0,
+				138,
+				714,
+				48
+			],
+			"walkstartframe": 2
+		},
+		"white": {
+			"crouch": [
+				0,
+				1152,
+				748,
+				40
+			],
+			"crouchframes": 16,
+			"crouchpower": [
+				0,
+				186,
+				748,
+				40
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 44,
+			"crouchsizey": 40,
+			"crouchstartframe": 1,
+			"die": [
+				0,
+				1102,
+				1248,
+				50
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 24,
+			"diesizey": 50,
+			"framerefreshtime": 2,
+			"modelsizex": 34,
+			"walk": [
+				0,
+				1054,
+				714,
+				48
+			],
+			"walkframes": 20,
+			"walkpower": [
+				0,
+				138,
+				714,
+				48
+			],
+			"walkstartframe": 2
+		},
+		"yellow": {
+			"crouch": [
+				0,
+				1290,
+				748,
+				40
+			],
+			"crouchframes": 16,
+			"crouchpower": [
+				0,
+				186,
+				748,
+				40
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 44,
+			"crouchsizey": 40,
+			"crouchstartframe": 1,
+			"die": [
+				0,
+				1240,
+				1248,
+				50
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 24,
+			"diesizey": 50,
+			"framerefreshtime": 2,
+			"modelsizex": 34,
+			"walk": [
+				0,
+				1192,
+				714,
+				48
+			],
+			"walkframes": 20,
+			"walkpower": [
+				0,
+				138,
+				714,
+				48
+			],
+			"walkstartframe": 2
+		}
+	},
+	"grunt": {
+		"blue": {
+			"crouch": [
+				0,
+				102,
+				850,
+				38
+			],
+			"crouchframes": 16,
+			"crouchpower": [
+				0,
+				188,
+				850,
+				38
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 50,
+			"crouchsizey": 38,
+			"crouchstartframe": 5,
+			"die": [
+				0,
+				48,
+				1508,
+				54
+			],
+			"dieframerefreshtime": 1,
+			"dieframes": 29,
+			"diesizey": 50,
+			"framerefreshtime": 2,
+			"modelsizex": 39,
+			"walk": [
+				0,
+				0,
+				975,
+				48
+			],
+			"walkframes": 24,
+			"walkpower": [
+				0,
+				140,
+				975,
+				48
+			],
+			"walkstartframe": 15
+		},
+		"default": {
+			"crouch": [
+				0,
+				328,
+				850,
+				38
+			],
+			"crouchframes": 16,
+			"crouchpower": [
+				0,
+				188,
+				850,
+				38
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 50,
+			"crouchsizey": 38,
+			"crouchstartframe": 5,
+			"die": [
+				0,
+				274,
+				1508,
+				54
+			],
+			"dieframerefreshtime": 1,
+			"dieframes": 29,
+			"diesizey": 50,
+			"framerefreshtime": 2,
+			"modelsizex": 39,
+			"walk": [
+				0,
+				226,
+				975,
+				48
+			],
+			"walkframes": 24,
+			"walkpower": [
+				0,
+				140,
+				975,
+				48
+			],
+			"walkstartframe": 15
+		},
+		"red": {
+			"crouch": [
+				0,
+				468,
+				850,
+				38
+			],
+			"crouchframes": 16,
+			"crouchpower": [
+				0,
+				188,
+				850,
+				38
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 50,
+			"crouchsizey": 38,
+			"crouchstartframe": 5,
+			"die": [
+				0,
+				414,
+				1508,
+				54
+			],
+			"dieframerefreshtime": 1,
+			"dieframes": 29,
+			"diesizey": 50,
+			"framerefreshtime": 2,
+			"modelsizex": 39,
+			"walk": [
+				0,
+				366,
+				975,
+				48
+			],
+			"walkframes": 24,
+			"walkpower": [
+				0,
+				140,
+				975,
+				48
+			],
+			"walkstartframe": 15
+		}
+	},
+	"halo": {
+		"blue": {
+			"crouch": [
+				0,
+				96,
+				800,
+				39
+			],
+			"crouchframes": 14,
+			"crouchpower": [
+				0,
+				183,
+				800,
+				39
+			],
+			"crouchrefreshtime": 4,
+			"crouchsizex": 50,
+			"crouchsizey": 39,
+			"crouchstartframe": 1,
+			"die": [
+				0,
+				48,
+				1040,
+				48
+			],
+			"dieframerefreshtime": 4,
+			"dieframes": 20,
+			"diesizey": 48,
+			"framerefreshtime": 3,
+			"modelsizex": 45,
+			"walk": [
+				0,
+				0,
+				765,
+				48
+			],
+			"walkframes": 16,
+			"walkpower": [
+				0,
+				135,
+				765,
+				48
+			],
+			"walkstartframe": 2
+		},
+		"default": {
+			"crouch": [
+				0,
+				318,
+				800,
+				39
+			],
+			"crouchframes": 14,
+			"crouchpower": [
+				0,
+				183,
+				800,
+				39
+			],
+			"crouchrefreshtime": 4,
+			"crouchsizex": 50,
+			"crouchsizey": 39,
+			"crouchstartframe": 1,
+			"die": [
+				0,
+				270,
+				1040,
+				48
+			],
+			"dieframerefreshtime": 4,
+			"dieframes": 20,
+			"diesizey": 48,
+			"framerefreshtime": 3,
+			"modelsizex": 45,
+			"walk": [
+				0,
+				222,
+				765,
+				48
+			],
+			"walkframes": 16,
+			"walkpower": [
+				0,
+				135,
+				765,
+				48
+			],
+			"walkstartframe": 2
+		},
+		"red": {
+			"crouch": [
+				0,
+				453,
+				800,
+				39
+			],
+			"crouchframes": 14,
+			"crouchpower": [
+				0,
+				183,
+				800,
+				39
+			],
+			"crouchrefreshtime": 4,
+			"crouchsizex": 50,
+			"crouchsizey": 39,
+			"crouchstartframe": 1,
+			"die": [
+				0,
+				405,
+				1040,
+				48
+			],
+			"dieframerefreshtime": 4,
+			"dieframes": 20,
+			"diesizey": 48,
+			"framerefreshtime": 3,
+			"modelsizex": 45,
+			"walk": [
+				0,
+				357,
+				765,
+				48
+			],
+			"walkframes": 16,
+			"walkpower": [
+				0,
+				135,
+				765,
+				48
+			],
+			"walkstartframe": 2
+		}
+	},
+	"keel": {
+		"blue": {
+			"crouch": [
+				0,
+				102,
+				988,
+				40
+			],
+			"crouchframes": 18,
+			"crouchpower": [
+				0,
+				190,
+				988,
+				40
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 52,
+			"crouchsizey": 40,
+			"crouchstartframe": 14,
+			"die": [
+				0,
+				48,
+				1508,
+				54
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 29,
+			"diesizey": 54,
+			"framerefreshtime": 2,
+			"modelsizex": 48,
+			"walk": [
+				0,
+				0,
+				960,
+				48
+			],
+			"walkframes": 19,
+			"walkpower": [
+				0,
+				142,
+				960,
+				48
+			],
+			"walkstartframe": 1
+		},
+		"dark": {
+			"crouch": [
+				0,
+				332,
+				988,
+				40
+			],
+			"crouchframes": 18,
+			"crouchpower": [
+				0,
+				190,
+				988,
+				40
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 52,
+			"crouchsizey": 40,
+			"crouchstartframe": 14,
+			"die": [
+				0,
+				278,
+				1508,
+				54
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 29,
+			"diesizey": 54,
+			"framerefreshtime": 2,
+			"modelsizex": 48,
+			"walk": [
+				0,
+				230,
+				960,
+				48
+			],
+			"walkframes": 19,
+			"walkpower": [
+				0,
+				142,
+				960,
+				48
+			],
+			"walkstartframe": 1
+		},
+		"default": {
+			"crouch": [
+				0,
+				474,
+				988,
+				40
+			],
+			"crouchframes": 18,
+			"crouchpower": [
+				0,
+				190,
+				988,
+				40
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 52,
+			"crouchsizey": 40,
+			"crouchstartframe": 14,
+			"die": [
+				0,
+				420,
+				1508,
+				54
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 29,
+			"diesizey": 54,
+			"framerefreshtime": 2,
+			"modelsizex": 48,
+			"walk": [
+				0,
+				372,
+				960,
+				48
+			],
+			"walkframes": 19,
+			"walkpower": [
+				0,
+				142,
+				960,
+				48
+			],
+			"walkstartframe": 1
+		},
+		"nuker": {
+			"crouch": [
+				0,
+				616,
+				988,
+				40
+			],
+			"crouchframes": 18,
+			"crouchpower": [
+				0,
+				190,
+				988,
+				40
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 52,
+			"crouchsizey": 40,
+			"crouchstartframe": 14,
+			"die": [
+				0,
+				562,
+				1508,
+				54
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 29,
+			"diesizey": 54,
+			"framerefreshtime": 2,
+			"modelsizex": 48,
+			"walk": [
+				0,
+				514,
+				960,
+				48
+			],
+			"walkframes": 19,
+			"walkpower": [
+				0,
+				142,
+				960,
+				48
+			],
+			"walkstartframe": 1
+		},
+		"red": {
+			"crouch": [
+				0,
+				758,
+				988,
+				40
+			],
+			"crouchframes": 18,
+			"crouchpower": [
+				0,
+				190,
+				988,
+				40
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 52,
+			"crouchsizey": 40,
+			"crouchstartframe": 14,
+			"die": [
+				0,
+				704,
+				1508,
+				54
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 29,
+			"diesizey": 54,
+			"framerefreshtime": 2,
+			"modelsizex": 48,
+			"walk": [
+				0,
+				656,
+				960,
+				48
+			],
+			"walkframes": 19,
+			"walkpower": [
+				0,
+				142,
+				960,
+				48
+			],
+			"walkstartframe": 1
+		},
+		"white": {
+			"crouch": [
+				0,
+				900,
+				988,
+				40
+			],
+			"crouchframes": 18,
+			"crouchpower": [
+				0,
+				190,
+				988,
+				40
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 52,
+			"crouchsizey": 40,
+			"crouchstartframe": 14,
+			"die": [
+				0,
+				846,
+				1508,
+				54
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 29,
+			"diesizey": 54,
+			"framerefreshtime": 2,
+			"modelsizex": 48,
+			"walk": [
+				0,
+				798,
+				960,
+				48
+			],
+			"walkframes": 19,
+			"walkpower": [
+				0,
+				142,
+				960,
+				48
+			],
+			"walkstartframe": 1
+		},
+		"yellow": {
+			"crouch": [
+				0,
+				1042,
+				988,
+				40
+			],
+			"crouchframes": 18,
+			"crouchpower": [
+				0,
+				190,
+				988,
+				40
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 52,
+			"crouchsizey": 40,
+			"crouchstartframe": 14,
+			"die": [
+				0,
+				988,
+				1508,
+				54
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 29,
+			"diesizey": 54,
+			"framerefreshtime": 2,
+			"modelsizex": 48,
+			"walk": [
+				0,
+				940,
+				960,
+				48
+			],
+			"walkframes": 19,
+			"walkpower": [
+				0,
+				142,
+				960,
+				48
+			],
+			"walkstartframe": 1
+		}
+	},
+	"klesk2": {
+		"blue": {
+			"crouch": [
+				0,
+				98,
+				950,
+				40
+			],
+			"crouchframes": 19,
+			"crouchpower": [
+				0,
+				186,
+				950,
+				40
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 50,
+			"crouchsizey": 40,
+			"crouchstartframe": 0,
+			"die": [
+				0,
+				48,
+				1144,
+				50
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 22,
+			"diesizey": 50,
+			"framerefreshtime": 2,
+			"modelsizex": 37,
+			"walk": [
+				0,
+				0,
+				888,
+				48
+			],
+			"walkframes": 23,
+			"walkpower": [
+				0,
+				138,
+				888,
+				48
+			],
+			"walkstartframe": 1
+		},
+		"default": {
+			"crouch": [
+				0,
+				324,
+				950,
+				40
+			],
+			"crouchframes": 19,
+			"crouchpower": [
+				0,
+				186,
+				950,
+				40
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 50,
+			"crouchsizey": 40,
+			"crouchstartframe": 0,
+			"die": [
+				0,
+				274,
+				1144,
+				50
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 22,
+			"diesizey": 50,
+			"framerefreshtime": 2,
+			"modelsizex": 37,
+			"walk": [
+				0,
+				226,
+				888,
+				48
+			],
+			"walkframes": 23,
+			"walkpower": [
+				0,
+				138,
+				888,
+				48
+			],
+			"walkstartframe": 1
+		},
+		"flisk": {
+			"crouch": [
+				0,
+				462,
+				950,
+				40
+			],
+			"crouchframes": 19,
+			"crouchpower": [
+				0,
+				186,
+				950,
+				40
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 50,
+			"crouchsizey": 40,
+			"crouchstartframe": 0,
+			"die": [
+				0,
+				412,
+				1144,
+				50
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 22,
+			"diesizey": 50,
+			"framerefreshtime": 2,
+			"modelsizex": 37,
+			"walk": [
+				0,
+				364,
+				888,
+				48
+			],
+			"walkframes": 23,
+			"walkpower": [
+				0,
+				138,
+				888,
+				48
+			],
+			"walkstartframe": 1
+		},
+		"red": {
+			"crouch": [
+				0,
+				600,
+				950,
+				40
+			],
+			"crouchframes": 19,
+			"crouchpower": [
+				0,
+				186,
+				950,
+				40
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 50,
+			"crouchsizey": 40,
+			"crouchstartframe": 0,
+			"die": [
+				0,
+				550,
+				1144,
+				50
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 22,
+			"diesizey": 50,
+			"framerefreshtime": 2,
+			"modelsizex": 37,
+			"walk": [
+				0,
+				502,
+				888,
+				48
+			],
+			"walkframes": 23,
+			"walkpower": [
+				0,
+				138,
+				888,
+				48
+			],
+			"walkstartframe": 1
+		},
+		"white": {
+			"crouch": [
+				0,
+				738,
+				950,
+				40
+			],
+			"crouchframes": 19,
+			"crouchpower": [
+				0,
+				186,
+				950,
+				40
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 50,
+			"crouchsizey": 40,
+			"crouchstartframe": 0,
+			"die": [
+				0,
+				688,
+				1196,
+				50
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 22,
+			"diesizey": 50,
+			"framerefreshtime": 2,
+			"modelsizex": 37,
+			"walk": [
+				0,
+				640,
+				888,
+				48
+			],
+			"walkframes": 23,
+			"walkpower": [
+				0,
+				138,
+				888,
+				48
+			],
+			"walkstartframe": 1
+		}
+	},
+	"qforcer": {
+		"blue": {
+			"crouch": [
+				0,
+				94,
+				714,
+				36
+			],
+			"crouchframes": 16,
+			"crouchpower": [
+				0,
+				178,
+				714,
+				36
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 42,
+			"crouchsizey": 36,
+			"crouchstartframe": 1,
+			"die": [
+				0,
+				48,
+				1248,
+				46
+			],
+			"dieframerefreshtime": 1,
+			"dieframes": 26,
+			"diesizey": 46,
+			"framerefreshtime": 2,
+			"modelsizex": 52,
+			"walk": [
+				0,
+				0,
+				988,
+				48
+			],
+			"walkframes": 18,
+			"walkpower": [
+				0,
+				130,
+				988,
+				48
+			],
+			"walkstartframe": 17
+		},
+		"default": {
+			"crouch": [
+				0,
+				308,
+				714,
+				36
+			],
+			"crouchframes": 16,
+			"crouchpower": [
+				0,
+				178,
+				714,
+				36
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 42,
+			"crouchsizey": 36,
+			"crouchstartframe": 1,
+			"die": [
+				0,
+				262,
+				1248,
+				46
+			],
+			"dieframerefreshtime": 1,
+			"dieframes": 26,
+			"diesizey": 46,
+			"framerefreshtime": 2,
+			"modelsizex": 52,
+			"walk": [
+				0,
+				214,
+				988,
+				48
+			],
+			"walkframes": 18,
+			"walkpower": [
+				0,
+				130,
+				988,
+				48
+			],
+			"walkstartframe": 17
+		},
+		"red": {
+			"crouch": [
+				0,
+				438,
+				714,
+				36
+			],
+			"crouchframes": 16,
+			"crouchpower": [
+				0,
+				178,
+				714,
+				36
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 42,
+			"crouchsizey": 36,
+			"crouchstartframe": 1,
+			"die": [
+				0,
+				392,
+				1248,
+				46
+			],
+			"dieframerefreshtime": 1,
+			"dieframes": 26,
+			"diesizey": 46,
+			"framerefreshtime": 2,
+			"modelsizex": 52,
+			"walk": [
+				0,
+				344,
+				988,
+				48
+			],
+			"walkframes": 18,
+			"walkpower": [
+				0,
+				130,
+				988,
+				48
+			],
+			"walkstartframe": 17
+		}
+	},
+	"ranger": {
+		"blue": {
+			"crouch": [
+				0,
+				98,
+				935,
+				39
+			],
+			"crouchframes": 16,
+			"crouchpower": [
+				0,
+				185,
+				935,
+				39
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 55,
+			"crouchsizey": 39,
+			"crouchstartframe": 10,
+			"die": [
+				0,
+				48,
+				1508,
+				50
+			],
+			"dieframerefreshtime": 1,
+			"dieframes": 30,
+			"diesizey": 50,
+			"framerefreshtime": 2,
+			"modelsizex": 56,
+			"walk": [
+				0,
+				0,
+				1064,
+				48
+			],
+			"walkframes": 18,
+			"walkpower": [
+				0,
+				137,
+				1064,
+				48
+			],
+			"walkstartframe": 12
+		},
+		"default": {
+			"crouch": [
+				0,
+				322,
+				935,
+				39
+			],
+			"crouchframes": 16,
+			"crouchpower": [
+				0,
+				185,
+				935,
+				39
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 55,
+			"crouchsizey": 39,
+			"crouchstartframe": 10,
+			"die": [
+				0,
+				272,
+				1508,
+				50
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 30,
+			"diesizey": 50,
+			"framerefreshtime": 2,
+			"modelsizex": 56,
+			"walk": [
+				0,
+				224,
+				1064,
+				48
+			],
+			"walkframes": 18,
+			"walkpower": [
+				0,
+				137,
+				1064,
+				48
+			],
+			"walkstartframe": 1
+		},
+		"red": {
+			"crouch": [
+				0,
+				459,
+				935,
+				39
+			],
+			"crouchframes": 16,
+			"crouchpower": [
+				0,
+				185,
+				935,
+				39
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 55,
+			"crouchsizey": 39,
+			"crouchstartframe": 10,
+			"die": [
+				0,
+				409,
+				1508,
+				50
+			],
+			"dieframerefreshtime": 1,
+			"dieframes": 30,
+			"diesizey": 50,
+			"framerefreshtime": 2,
+			"modelsizex": 56,
+			"walk": [
+				0,
+				361,
+				1064,
+				48
+			],
+			"walkframes": 18,
+			"walkpower": [
+				0,
+				137,
+				1064,
+				48
+			],
+			"walkstartframe": 12
+		}
+	},
+	"rawsteel": {
+		"blue": {
+			"crouch": [
+				0,
+				96,
+				750,
+				36
+			],
+			"crouchframes": 14,
+			"crouchpower": [
+				0,
+				180,
+				750,
+				36
+			],
+			"crouchrefreshtime": 3,
+			"crouchsizex": 50,
+			"crouchsizey": 36,
+			"crouchstartframe": 0,
+			"die": [
+				0,
+				48,
+				884,
+				48
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 17,
+			"diesizey": 48,
+			"framerefreshtime": 2,
+			"modelsizex": 50,
+			"walk": [
+				0,
+				0,
+				950,
+				48
+			],
+			"walkframes": 18,
+			"walkpower": [
+				0,
+				132,
+				950,
+				48
+			],
+			"walkstartframe": 10
+		},
+		"default": {
+			"crouch": [
+				0,
+				312,
+				750,
+				36
+			],
+			"crouchframes": 14,
+			"crouchpower": [
+				0,
+				180,
+				750,
+				36
+			],
+			"crouchrefreshtime": 3,
+			"crouchsizex": 50,
+			"crouchsizey": 36,
+			"crouchstartframe": 0,
+			"die": [
+				0,
+				264,
+				884,
+				48
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 17,
+			"diesizey": 48,
+			"framerefreshtime": 2,
+			"modelsizex": 50,
+			"walk": [
+				0,
+				216,
+				950,
+				48
+			],
+			"walkframes": 18,
+			"walkpower": [
+				0,
+				132,
+				950,
+				48
+			],
+			"walkstartframe": 10
+		},
+		"red": {
+			"crouch": [
+				0,
+				444,
+				750,
+				36
+			],
+			"crouchframes": 14,
+			"crouchpower": [
+				0,
+				180,
+				750,
+				36
+			],
+			"crouchrefreshtime": 3,
+			"crouchsizex": 50,
+			"crouchsizey": 36,
+			"crouchstartframe": 0,
+			"die": [
+				0,
+				396,
+				884,
+				48
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 17,
+			"diesizey": 48,
+			"framerefreshtime": 2,
+			"modelsizex": 50,
+			"walk": [
+				0,
+				348,
+				950,
+				48
+			],
+			"walkframes": 18,
+			"walkpower": [
+				0,
+				132,
+				950,
+				48
+			],
+			"walkstartframe": 10
+		}
+	},
+	"razor": {
+		"blue": {
+			"crouch": [
+				0,
+				99,
+				598,
+				40
+			],
+			"crouchframes": 12,
+			"crouchpower": [
+				0,
+				187,
+				598,
+				40
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 46,
+			"crouchsizey": 40,
+			"crouchstartframe": 1,
+			"die": [
+				0,
+				48,
+				1508,
+				51
+			],
+			"dieframerefreshtime": 1,
+			"dieframes": 29,
+			"diesizey": 51,
+			"framerefreshtime": 2,
+			"modelsizex": 56,
+			"walk": [
+				0,
+				0,
+				1008,
+				48
+			],
+			"walkframes": 17,
+			"walkpower": [
+				0,
+				139,
+				1008,
+				48
+			],
+			"walkstartframe": 1
+		},
+		"default": {
+			"crouch": [
+				0,
+				326,
+				598,
+				40
+			],
+			"crouchframes": 12,
+			"crouchpower": [
+				0,
+				187,
+				598,
+				40
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 46,
+			"crouchsizey": 40,
+			"crouchstartframe": 1,
+			"die": [
+				0,
+				275,
+				1508,
+				51
+			],
+			"dieframerefreshtime": 1,
+			"dieframes": 29,
+			"diesizey": 51,
+			"framerefreshtime": 2,
+			"modelsizex": 56,
+			"walk": [
+				0,
+				227,
+				1008,
+				48
+			],
+			"walkframes": 17,
+			"walkpower": [
+				0,
+				139,
+				1008,
+				48
+			],
+			"walkstartframe": 1
+		},
+		"red": {
+			"crouch": [
+				0,
+				465,
+				598,
+				40
+			],
+			"crouchframes": 12,
+			"crouchpower": [
+				0,
+				187,
+				598,
+				40
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 46,
+			"crouchsizey": 40,
+			"crouchstartframe": 1,
+			"die": [
+				0,
+				414,
+				1508,
+				51
+			],
+			"dieframerefreshtime": 1,
+			"dieframes": 29,
+			"diesizey": 51,
+			"framerefreshtime": 2,
+			"modelsizex": 56,
+			"walk": [
+				0,
+				366,
+				1008,
+				48
+			],
+			"walkframes": 17,
+			"walkpower": [
+				0,
+				139,
+				1008,
+				48
+			],
+			"walkstartframe": 1
+		},
+		"yellow": {
+			"crouch": [
+				0,
+				604,
+				598,
+				40
+			],
+			"crouchframes": 12,
+			"crouchpower": [
+				0,
+				187,
+				598,
+				40
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 46,
+			"crouchsizey": 40,
+			"crouchstartframe": 1,
+			"die": [
+				0,
+				553,
+				1508,
+				51
+			],
+			"dieframerefreshtime": 1,
+			"dieframes": 29,
+			"diesizey": 51,
+			"framerefreshtime": 2,
+			"modelsizex": 56,
+			"walk": [
+				0,
+				505,
+				1008,
+				48
+			],
+			"walkframes": 17,
+			"walkpower": [
+				0,
+				139,
+				1008,
+				48
+			],
+			"walkstartframe": 1
+		}
+	},
+	"sarge": {
+		"blue": {
+			"crouch": [
+				0,
+				96,
+				550,
+				40
+			],
+			"crouchframes": 10,
+			"crouchpower": [
+				0,
+				184,
+				550,
+				40
+			],
+			"crouchrefreshtime": 3,
+			"crouchsizex": 50,
+			"crouchsizey": 40,
+			"crouchstartframe": 0,
+			"die": [
+				0,
+				48,
+				1560,
+				48
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 30,
+			"diesizey": 48,
+			"framerefreshtime": 2,
+			"modelsizex": 45,
+			"walk": [
+				0,
+				0,
+				855,
+				48
+			],
+			"walkframes": 18,
+			"walkpower": [
+				0,
+				136,
+				855,
+				48
+			],
+			"walkstartframe": 18
+		},
+		"dark": {
+			"crouch": [
+				0,
+				320,
+				550,
+				40
+			],
+			"crouchframes": 10,
+			"crouchpower": [
+				0,
+				184,
+				550,
+				40
+			],
+			"crouchrefreshtime": 3,
+			"crouchsizex": 50,
+			"crouchsizey": 40,
+			"crouchstartframe": 0,
+			"die": [
+				0,
+				272,
+				1560,
+				48
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 30,
+			"diesizey": 48,
+			"framerefreshtime": 2,
+			"modelsizex": 45,
+			"walk": [
+				0,
+				224,
+				855,
+				48
+			],
+			"walkframes": 18,
+			"walkpower": [
+				0,
+				136,
+				855,
+				48
+			],
+			"walkstartframe": 18
+		},
+		"default": {
+			"crouch": [
+				0,
+				456,
+				550,
+				40
+			],
+			"crouchframes": 10,
+			"crouchpower": [
+				0,
+				184,
+				550,
+				40
+			],
+			"crouchrefreshtime": 3,
+			"crouchsizex": 50,
+			"crouchsizey": 40,
+			"crouchstartframe": 0,
+			"die": [
+				0,
+				408,
+				1560,
+				48
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 30,
+			"diesizey": 48,
+			"framerefreshtime": 2,
+			"modelsizex": 45,
+			"walk": [
+				0,
+				360,
+				855,
+				48
+			],
+			"walkframes": 18,
+			"walkpower": [
+				0,
+				136,
+				855,
+				48
+			],
+			"walkstartframe": 18
+		},
+		"nuker": {
+			"crouch": [
+				0,
+				592,
+				550,
+				40
+			],
+			"crouchframes": 10,
+			"crouchpower": [
+				0,
+				184,
+				550,
+				40
+			],
+			"crouchrefreshtime": 3,
+			"crouchsizex": 50,
+			"crouchsizey": 40,
+			"crouchstartframe": 0,
+			"die": [
+				0,
+				544,
+				1560,
+				48
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 30,
+			"diesizey": 48,
+			"framerefreshtime": 2,
+			"modelsizex": 45,
+			"walk": [
+				0,
+				496,
+				855,
+				48
+			],
+			"walkframes": 18,
+			"walkpower": [
+				0,
+				136,
+				855,
+				48
+			],
+			"walkstartframe": 18
+		},
+		"red": {
+			"crouch": [
+				0,
+				728,
+				550,
+				40
+			],
+			"crouchframes": 10,
+			"crouchpower": [
+				0,
+				184,
+				550,
+				40
+			],
+			"crouchrefreshtime": 3,
+			"crouchsizex": 50,
+			"crouchsizey": 40,
+			"crouchstartframe": 0,
+			"die": [
+				0,
+				680,
+				1560,
+				48
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 30,
+			"diesizey": 48,
+			"framerefreshtime": 2,
+			"modelsizex": 45,
+			"walk": [
+				0,
+				632,
+				855,
+				48
+			],
+			"walkframes": 18,
+			"walkpower": [
+				0,
+				136,
+				855,
+				48
+			],
+			"walkstartframe": 18
+		},
+		"white": {
+			"crouch": [
+				0,
+				864,
+				550,
+				40
+			],
+			"crouchframes": 10,
+			"crouchpower": [
+				0,
+				184,
+				550,
+				40
+			],
+			"crouchrefreshtime": 3,
+			"crouchsizex": 50,
+			"crouchsizey": 40,
+			"crouchstartframe": 0,
+			"die": [
+				0,
+				816,
+				1560,
+				48
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 30,
+			"diesizey": 48,
+			"framerefreshtime": 2,
+			"modelsizex": 45,
+			"walk": [
+				0,
+				768,
+				855,
+				48
+			],
+			"walkframes": 18,
+			"walkpower": [
+				0,
+				136,
+				855,
+				48
+			],
+			"walkstartframe": 18
+		},
+		"yellow": {
+			"crouch": [
+				0,
+				1000,
+				550,
+				40
+			],
+			"crouchframes": 10,
+			"crouchpower": [
+				0,
+				184,
+				550,
+				40
+			],
+			"crouchrefreshtime": 3,
+			"crouchsizex": 50,
+			"crouchsizey": 40,
+			"crouchstartframe": 0,
+			"die": [
+				0,
+				952,
+				1560,
+				48
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 30,
+			"diesizey": 48,
+			"framerefreshtime": 2,
+			"modelsizex": 45,
+			"walk": [
+				0,
+				904,
+				855,
+				48
+			],
+			"walkframes": 18,
+			"walkpower": [
+				0,
+				136,
+				855,
+				48
+			],
+			"walkstartframe": 18
+		}
+	},
+	"sorlag": {
+		"blue": {
+			"crouch": [
+				0,
+				102,
+				1100,
+				37
+			],
+			"crouchframes": 24,
+			"crouchpower": [
+				0,
+				187,
+				1100,
+				37
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 44,
+			"crouchsizey": 37,
+			"crouchstartframe": 8,
+			"die": [
+				0,
+				48,
+				1456,
+				54
+			],
+			"dieframerefreshtime": 1,
+			"dieframes": 28,
+			"diesizey": 54,
+			"framerefreshtime": 2,
+			"modelsizex": 52,
+			"walk": [
+				0,
+				0,
+				832,
+				48
+			],
+			"walkframes": 15,
+			"walkpower": [
+				0,
+				139,
+				832,
+				48
+			],
+			"walkstartframe": 14
+		},
+		"default": {
+			"crouch": [
+				0,
+				323,
+				1012,
+				37
+			],
+			"crouchframes": 22,
+			"crouchpower": [
+				0,
+				408,
+				1012,
+				37
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 44,
+			"crouchsizey": 37,
+			"crouchstartframe": 8,
+			"die": [
+				0,
+				272,
+				1456,
+				51
+			],
+			"dieframerefreshtime": 1,
+			"dieframes": 28,
+			"diesizey": 51,
+			"framerefreshtime": 2,
+			"modelsizex": 52,
+			"walk": [
+				0,
+				224,
+				936,
+				48
+			],
+			"walkframes": 17,
+			"walkpower": [
+				0,
+				360,
+				936,
+				48
+			],
+			"walkstartframe": 14
+		},
+		"red": {
+			"crouch": [
+				0,
+				549,
+				1100,
+				37
+			],
+			"crouchframes": 24,
+			"crouchpower": [
+				0,
+				187,
+				1100,
+				37
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 44,
+			"crouchsizey": 37,
+			"crouchstartframe": 8,
+			"die": [
+				0,
+				493,
+				1716,
+				56
+			],
+			"dieframerefreshtime": 1,
+			"dieframes": 33,
+			"diesizey": 56,
+			"framerefreshtime": 2,
+			"modelsizex": 52,
+			"walk": [
+				0,
+				445,
+				832,
+				48
+			],
+			"walkframes": 15,
+			"walkpower": [
+				0,
+				139,
+				832,
+				48
+			],
+			"walkstartframe": 14
+		}
+	},
+	"tankjr": {
+		"blue": {
+			"crouch": [
+				0,
+				96,
+				1210,
+				41
+			],
+			"crouchframes": 21,
+			"crouchpower": [
+				0,
+				185,
+				1210,
+				41
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 55,
+			"crouchsizey": 41,
+			"crouchstartframe": 1,
+			"die": [
+				0,
+				48,
+				2288,
+				48
+			],
+			"dieframerefreshtime": 1,
+			"dieframes": 50,
+			"diesizey": 48,
+			"framerefreshtime": 2,
+			"modelsizex": 50,
+			"walk": [
+				0,
+				0,
+				1150,
+				48
+			],
+			"walkframes": 23,
+			"walkpower": [
+				0,
+				137,
+				1150,
+				48
+			],
+			"walkstartframe": 1
+		},
+		"dark": {
+			"crouch": [
+				0,
+				322,
+				1210,
+				41
+			],
+			"crouchframes": 21,
+			"crouchpower": [
+				0,
+				185,
+				1210,
+				41
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 55,
+			"crouchsizey": 41,
+			"crouchstartframe": 1,
+			"die": [
+				0,
+				274,
+				2288,
+				48
+			],
+			"dieframerefreshtime": 1,
+			"dieframes": 50,
+			"diesizey": 48,
+			"framerefreshtime": 2,
+			"modelsizex": 50,
+			"walk": [
+				0,
+				226,
+				1150,
+				48
+			],
+			"walkframes": 23,
+			"walkpower": [
+				0,
+				137,
+				1150,
+				48
+			],
+			"walkstartframe": 1
+		},
+		"default": {
+			"crouch": [
+				0,
+				459,
+				1210,
+				41
+			],
+			"crouchframes": 21,
+			"crouchpower": [
+				0,
+				185,
+				1210,
+				41
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 55,
+			"crouchsizey": 41,
+			"crouchstartframe": 1,
+			"die": [
+				0,
+				411,
+				2288,
+				48
+			],
+			"dieframerefreshtime": 1,
+			"dieframes": 50,
+			"diesizey": 48,
+			"framerefreshtime": 2,
+			"modelsizex": 50,
+			"walk": [
+				0,
+				363,
+				1150,
+				48
+			],
+			"walkframes": 23,
+			"walkpower": [
+				0,
+				137,
+				1150,
+				48
+			],
+			"walkstartframe": 1
+		},
+		"green": {
+			"crouch": [
+				0,
+				596,
+				1210,
+				41
+			],
+			"crouchframes": 21,
+			"crouchpower": [
+				0,
+				185,
+				1210,
+				41
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 55,
+			"crouchsizey": 41,
+			"crouchstartframe": 1,
+			"die": [
+				0,
+				548,
+				2288,
+				48
+			],
+			"dieframerefreshtime": 1,
+			"dieframes": 50,
+			"diesizey": 48,
+			"framerefreshtime": 2,
+			"modelsizex": 50,
+			"walk": [
+				0,
+				500,
+				1150,
+				48
+			],
+			"walkframes": 23,
+			"walkpower": [
+				0,
+				137,
+				1150,
+				48
+			],
+			"walkstartframe": 1
+		},
+		"red": {
+			"crouch": [
+				0,
+				733,
+				1210,
+				41
+			],
+			"crouchframes": 21,
+			"crouchpower": [
+				0,
+				185,
+				1210,
+				41
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 55,
+			"crouchsizey": 41,
+			"crouchstartframe": 1,
+			"die": [
+				0,
+				685,
+				2288,
+				48
+			],
+			"dieframerefreshtime": 1,
+			"dieframes": 50,
+			"diesizey": 48,
+			"framerefreshtime": 2,
+			"modelsizex": 50,
+			"walk": [
+				0,
+				637,
+				1150,
+				48
+			],
+			"walkframes": 23,
+			"walkpower": [
+				0,
+				137,
+				1150,
+				48
+			],
+			"walkstartframe": 1
+		},
+		"white": {
+			"crouch": [
+				0,
+				870,
+				1210,
+				41
+			],
+			"crouchframes": 21,
+			"crouchpower": [
+				0,
+				185,
+				1210,
+				41
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 55,
+			"crouchsizey": 41,
+			"crouchstartframe": 1,
+			"die": [
+				0,
+				822,
+				2288,
+				48
+			],
+			"dieframerefreshtime": 1,
+			"dieframes": 50,
+			"diesizey": 48,
+			"framerefreshtime": 2,
+			"modelsizex": 50,
+			"walk": [
+				0,
+				774,
+				1150,
+				48
+			],
+			"walkframes": 23,
+			"walkpower": [
+				0,
+				137,
+				1150,
+				48
+			],
+			"walkstartframe": 1
+		}
+	},
+	"uriel2": {
+		"blue": {
+			"crouch": [
+				0,
+				98,
+				736,
+				42
+			],
+			"crouchframes": 15,
+			"crouchpower": [
+				0,
+				188,
+				736,
+				42
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 46,
+			"crouchsizey": 42,
+			"crouchstartframe": 6,
+			"die": [
+				0,
+				48,
+				1404,
+				50
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 27,
+			"diesizey": 50,
+			"framerefreshtime": 2,
+			"modelsizex": 42,
+			"walk": [
+				0,
+				0,
+				1008,
+				48
+			],
+			"walkframes": 23,
+			"walkpower": [
+				0,
+				140,
+				1008,
+				48
+			],
+			"walkstartframe": 1
+		},
+		"default": {
+			"crouch": [
+				0,
+				328,
+				736,
+				42
+			],
+			"crouchframes": 15,
+			"crouchpower": [
+				0,
+				188,
+				736,
+				42
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 46,
+			"crouchsizey": 42,
+			"crouchstartframe": 6,
+			"die": [
+				0,
+				278,
+				1404,
+				50
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 27,
+			"diesizey": 50,
+			"framerefreshtime": 2,
+			"modelsizex": 42,
+			"walk": [
+				0,
+				230,
+				1008,
+				48
+			],
+			"walkframes": 23,
+			"walkpower": [
+				0,
+				140,
+				1008,
+				48
+			],
+			"walkstartframe": 1
+		},
+		"green": {
+			"crouch": [
+				0,
+				468,
+				736,
+				42
+			],
+			"crouchframes": 15,
+			"crouchpower": [
+				0,
+				188,
+				736,
+				42
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 46,
+			"crouchsizey": 42,
+			"crouchstartframe": 6,
+			"die": [
+				0,
+				418,
+				1404,
+				50
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 27,
+			"diesizey": 50,
+			"framerefreshtime": 2,
+			"modelsizex": 42,
+			"walk": [
+				0,
+				370,
+				1008,
+				48
+			],
+			"walkframes": 23,
+			"walkpower": [
+				0,
+				140,
+				1008,
+				48
+			],
+			"walkstartframe": 1
+		},
+		"red": {
+			"crouch": [
+				0,
+				608,
+				736,
+				42
+			],
+			"crouchframes": 15,
+			"crouchpower": [
+				0,
+				188,
+				736,
+				42
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 46,
+			"crouchsizey": 42,
+			"crouchstartframe": 6,
+			"die": [
+				0,
+				558,
+				1404,
+				50
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 27,
+			"diesizey": 50,
+			"framerefreshtime": 2,
+			"modelsizex": 42,
+			"walk": [
+				0,
+				510,
+				1008,
+				48
+			],
+			"walkframes": 23,
+			"walkpower": [
+				0,
+				140,
+				1008,
+				48
+			],
+			"walkstartframe": 1
+		},
+		"yellow": {
+			"crouch": [
+				0,
+				748,
+				736,
+				42
+			],
+			"crouchframes": 15,
+			"crouchpower": [
+				0,
+				188,
+				736,
+				42
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 46,
+			"crouchsizey": 42,
+			"crouchstartframe": 6,
+			"die": [
+				0,
+				698,
+				1404,
+				50
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 27,
+			"diesizey": 50,
+			"framerefreshtime": 2,
+			"modelsizex": 42,
+			"walk": [
+				0,
+				650,
+				1008,
+				48
+			],
+			"walkframes": 23,
+			"walkpower": [
+				0,
+				140,
+				1008,
+				48
+			],
+			"walkstartframe": 1
+		},
+		"zael": {
+			"crouch": [
+				0,
+				888,
+				736,
+				42
+			],
+			"crouchframes": 15,
+			"crouchpower": [
+				0,
+				978,
+				736,
+				42
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 46,
+			"crouchsizey": 42,
+			"crouchstartframe": 6,
+			"die": [
+				0,
+				838,
+				1404,
+				50
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 27,
+			"diesizey": 50,
+			"framerefreshtime": 2,
+			"modelsizex": 42,
+			"walk": [
+				0,
+				790,
+				1008,
+				48
+			],
+			"walkframes": 23,
+			"walkpower": [
+				0,
+				930,
+				1008,
+				48
+			],
+			"walkstartframe": 1
+		}
+	},
+	"utguyse": {
+		"blue": {
+			"crouch": [
+				0,
+				96,
+				570,
+				38
+			],
+			"crouchframes": 14,
+			"crouchpower": [
+				0,
+				182,
+				570,
+				38
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 38,
+			"crouchsizey": 38,
+			"crouchstartframe": 1,
+			"die": [
+				0,
+				48,
+				936,
+				48
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 17,
+			"diesizey": 48,
+			"framerefreshtime": 2,
+			"modelsizex": 38,
+			"walk": [
+				0,
+				0,
+				646,
+				48
+			],
+			"walkframes": 16,
+			"walkpower": [
+				0,
+				134,
+				646,
+				48
+			],
+			"walkstartframe": 8
+		},
+		"default": {
+			"crouch": [
+				0,
+				316,
+				570,
+				38
+			],
+			"crouchframes": 14,
+			"crouchpower": [
+				0,
+				182,
+				570,
+				38
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 38,
+			"crouchsizey": 38,
+			"crouchstartframe": 1,
+			"die": [
+				0,
+				268,
+				936,
+				48
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 17,
+			"diesizey": 48,
+			"framerefreshtime": 2,
+			"modelsizex": 38,
+			"walk": [
+				0,
+				220,
+				646,
+				48
+			],
+			"walkframes": 16,
+			"walkpower": [
+				0,
+				134,
+				646,
+				48
+			],
+			"walkstartframe": 8
+		},
+		"red": {
+			"crouch": [
+				0,
+				450,
+				570,
+				38
+			],
+			"crouchframes": 14,
+			"crouchpower": [
+				0,
+				182,
+				570,
+				38
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 38,
+			"crouchsizey": 38,
+			"crouchstartframe": 1,
+			"die": [
+				0,
+				402,
+				936,
+				48
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 17,
+			"diesizey": 48,
+			"framerefreshtime": 2,
+			"modelsizex": 38,
+			"walk": [
+				0,
+				354,
+				646,
+				48
+			],
+			"walkframes": 16,
+			"walkpower": [
+				0,
+				134,
+				646,
+				48
+			],
+			"walkstartframe": 8
+		},
+		"xmas": {
+			"crouch": [
+				0,
+				584,
+				570,
+				38
+			],
+			"crouchframes": 14,
+			"crouchpower": [
+				0,
+				670,
+				570,
+				38
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 38,
+			"crouchsizey": 38,
+			"crouchstartframe": 1,
+			"die": [
+				0,
+				536,
+				936,
+				48
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 17,
+			"diesizey": 48,
+			"framerefreshtime": 2,
+			"modelsizex": 38,
+			"walk": [
+				0,
+				488,
+				646,
+				48
+			],
+			"walkframes": 16,
+			"walkpower": [
+				0,
+				622,
+				646,
+				48
+			],
+			"walkstartframe": 1
+		}
+	},
+	"visor": {
+		"blue": {
+			"crouch": [
+				0,
+				90,
+				663,
+				36
+			],
+			"crouchframes": 12,
+			"crouchpower": [
+				0,
+				174,
+				663,
+				36
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 51,
+			"crouchsizey": 36,
+			"crouchstartframe": 3,
+			"die": [
+				0,
+				48,
+				1456,
+				42
+			],
+			"dieframerefreshtime": 1,
+			"dieframes": 28,
+			"diesizey": 42,
+			"framerefreshtime": 2,
+			"modelsizex": 42,
+			"walk": [
+				0,
+				0,
+				1050,
+				48
+			],
+			"walkframes": 24,
+			"walkpower": [
+				0,
+				126,
+				1050,
+				48
+			],
+			"walkstartframe": 1
+		},
+		"default": {
+			"crouch": [
+				0,
+				297,
+				663,
+				34
+			],
+			"crouchframes": 12,
+			"crouchpower": [
+				0,
+				379,
+				663,
+				34
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 51,
+			"crouchsizey": 34,
+			"crouchstartframe": 3,
+			"die": [
+				0,
+				258,
+				1508,
+				39
+			],
+			"dieframerefreshtime": 1,
+			"dieframes": 29,
+			"diesizey": 39,
+			"framerefreshtime": 2,
+			"modelsizex": 42,
+			"walk": [
+				0,
+				210,
+				1050,
+				48
+			],
+			"walkframes": 24,
+			"walkpower": [
+				0,
+				331,
+				1050,
+				48
+			],
+			"walkstartframe": 1
+		},
+		"red": {
+			"crouch": [
+				0,
+				503,
+				663,
+				36
+			],
+			"crouchframes": 12,
+			"crouchpower": [
+				0,
+				174,
+				663,
+				36
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 51,
+			"crouchsizey": 36,
+			"crouchstartframe": 3,
+			"die": [
+				0,
+				461,
+				1456,
+				42
+			],
+			"dieframerefreshtime": 1,
+			"dieframes": 28,
+			"diesizey": 42,
+			"framerefreshtime": 2,
+			"modelsizex": 42,
+			"walk": [
+				0,
+				413,
+				1050,
+				48
+			],
+			"walkframes": 24,
+			"walkpower": [
+				0,
+				126,
+				1050,
+				48
+			],
+			"walkstartframe": 1
+		}
+	},
+	"xaero": {
+		"blue": {
+			"crouch": [
+				0,
+				96,
+				765,
+				40
+			],
+			"crouchframes": 16,
+			"crouchpower": [
+				0,
+				184,
+				765,
+				40
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 45,
+			"crouchsizey": 40,
+			"crouchstartframe": 0,
+			"die": [
+				0,
+				48,
+				1352,
+				48
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 26,
+			"diesizey": 48,
+			"framerefreshtime": 2,
+			"modelsizex": 45,
+			"walk": [
+				0,
+				0,
+				1035,
+				48
+			],
+			"walkframes": 22,
+			"walkpower": [
+				0,
+				136,
+				1035,
+				48
+			],
+			"walkstartframe": 13
+		},
+		"dark": {
+			"crouch": [
+				0,
+				320,
+				765,
+				40
+			],
+			"crouchframes": 16,
+			"crouchpower": [
+				0,
+				184,
+				765,
+				40
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 45,
+			"crouchsizey": 40,
+			"crouchstartframe": 0,
+			"die": [
+				0,
+				272,
+				1352,
+				48
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 26,
+			"diesizey": 48,
+			"framerefreshtime": 2,
+			"modelsizex": 45,
+			"walk": [
+				0,
+				224,
+				1035,
+				48
+			],
+			"walkframes": 22,
+			"walkpower": [
+				0,
+				136,
+				1035,
+				48
+			],
+			"walkstartframe": 13
+		},
+		"default": {
+			"crouch": [
+				0,
+				456,
+				765,
+				40
+			],
+			"crouchframes": 16,
+			"crouchpower": [
+				0,
+				184,
+				765,
+				40
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 45,
+			"crouchsizey": 40,
+			"crouchstartframe": 0,
+			"die": [
+				0,
+				408,
+				1352,
+				48
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 26,
+			"diesizey": 48,
+			"framerefreshtime": 2,
+			"modelsizex": 45,
+			"walk": [
+				0,
+				360,
+				1035,
+				48
+			],
+			"walkframes": 22,
+			"walkpower": [
+				0,
+				136,
+				1035,
+				48
+			],
+			"walkstartframe": 13
+		},
+		"green": {
+			"crouch": [
+				0,
+				592,
+				765,
+				40
+			],
+			"crouchframes": 16,
+			"crouchpower": [
+				0,
+				184,
+				765,
+				40
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 45,
+			"crouchsizey": 40,
+			"crouchstartframe": 0,
+			"die": [
+				0,
+				544,
+				1352,
+				48
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 26,
+			"diesizey": 48,
+			"framerefreshtime": 2,
+			"modelsizex": 45,
+			"walk": [
+				0,
+				496,
+				1035,
+				48
+			],
+			"walkframes": 22,
+			"walkpower": [
+				0,
+				136,
+				1035,
+				48
+			],
+			"walkstartframe": 13
+		},
+		"red": {
+			"crouch": [
+				0,
+				728,
+				765,
+				40
+			],
+			"crouchframes": 16,
+			"crouchpower": [
+				0,
+				184,
+				765,
+				40
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 45,
+			"crouchsizey": 40,
+			"crouchstartframe": 0,
+			"die": [
+				0,
+				680,
+				1352,
+				48
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 26,
+			"diesizey": 48,
+			"framerefreshtime": 2,
+			"modelsizex": 45,
+			"walk": [
+				0,
+				632,
+				1035,
+				48
+			],
+			"walkframes": 22,
+			"walkpower": [
+				0,
+				136,
+				1035,
+				48
+			],
+			"walkstartframe": 13
+		},
+		"silver": {
+			"crouch": [
+				0,
+				864,
+				765,
+				40
+			],
+			"crouchframes": 16,
+			"crouchpower": [
+				0,
+				184,
+				765,
+				40
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 45,
+			"crouchsizey": 40,
+			"crouchstartframe": 0,
+			"die": [
+				0,
+				816,
+				1352,
+				48
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 26,
+			"diesizey": 48,
+			"framerefreshtime": 2,
+			"modelsizex": 45,
+			"walk": [
+				0,
+				768,
+				1035,
+				48
+			],
+			"walkframes": 22,
+			"walkpower": [
+				0,
+				136,
+				1035,
+				48
+			],
+			"walkstartframe": 13
+		},
+		"white": {
+			"crouch": [
+				0,
+				1000,
+				765,
+				40
+			],
+			"crouchframes": 16,
+			"crouchpower": [
+				0,
+				184,
+				765,
+				40
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 45,
+			"crouchsizey": 40,
+			"crouchstartframe": 0,
+			"die": [
+				0,
+				952,
+				1352,
+				48
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 26,
+			"diesizey": 48,
+			"framerefreshtime": 2,
+			"modelsizex": 45,
+			"walk": [
+				0,
+				904,
+				1035,
+				48
+			],
+			"walkframes": 22,
+			"walkpower": [
+				0,
+				136,
+				1035,
+				48
+			],
+			"walkstartframe": 13
+		},
+		"yellow": {
+			"crouch": [
+				0,
+				1136,
+				765,
+				40
+			],
+			"crouchframes": 16,
+			"crouchpower": [
+				0,
+				184,
+				765,
+				40
+			],
+			"crouchrefreshtime": 2,
+			"crouchsizex": 45,
+			"crouchsizey": 40,
+			"crouchstartframe": 0,
+			"die": [
+				0,
+				1088,
+				1352,
+				48
+			],
+			"dieframerefreshtime": 2,
+			"dieframes": 26,
+			"diesizey": 48,
+			"framerefreshtime": 2,
+			"modelsizex": 45,
+			"walk": [
+				0,
+				1040,
+				1035,
+				48
+			],
+			"walkframes": 22,
+			"walkpower": [
+				0,
+				136,
+				1035,
+				48
+			],
+			"walkstartframe": 13
+		}
+	}
+}

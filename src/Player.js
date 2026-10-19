@@ -4,6 +4,7 @@ import Constants from "./Constants.js";
 import PlayerGraphics from "./PlayerGraphics.js";
 import PlayerPhysics from "./Physics.js";
 import Sound from "./Sound.js";
+import Models from "./Models.js";
 import WeaponGauntlet from "./objects/WeaponGauntlet.js";
 import WeaponMachine from "./objects/WeaponMachine.js";
 import WeaponShotgun from "./objects/WeaponShotgun.js";
@@ -45,6 +46,19 @@ class Player {
 		this.team = Constants.C_TEAMNON;
 		this.model = 'sarge'; // // use setModel() for change
         this.modelColor = 'default';
+		this.nfkModel = { model: 'sarge', skin: 'default' }; // model and skin the player asked for (the drawn ones are model, modelColor)
+		this.frame = 0; // walk animation frame (PlayerAnim)
+		this.nextframe = 0; // ticks to the next walk frame
+		this.frm = 0; // pattern of the model bitmap: 0 stands, 1.. walks
+		this.ticks = 0; // game ticks, STIME = ticks * 20 ms
+		this.paintime = 0; // no pain sound while counting down
+		this.bodyangle = 0; // angle of the held weapon (PlayerWeaponAnim)
+		this.mgun_angle = 0; // aim servo of the weapon
+		this.mgun_lock = 1; // snap the servo to the aim
+		this.mgun_firets = 0; // STIME till which the machinegun fires
+		this.mgun_speed = 0;
+		this.mgun_frametimer = 0;
+		this.mgun_spin = 0; // machinegun barrel frame 0..5
         
 		this.rewardtime = 0; //?
 		this.fangle = 0; // angle of weapon
@@ -140,21 +154,23 @@ class Player {
 		};
 	}
 
-    setModel(model, color) {
-        this.model = model;
-        this.modelColor = color;
-        // set defaults if not found
-        if (!this.graphics.animations[this.model]) {
-            this.model = 'sarge';
-            console.log("reset model (model not found " + model + ")");
-        }
-        if (!this.graphics.animations[this.model][this.modelColor]) {
-            this.modelColor = 'default';
-            console.log("reset color (model not found " + model + "+" + color + ")");
-        }
-        this.graphics.updateModel();
-    }
-		
+	// model the player asked for, the drawn model is chosen by assignModel()
+	setModel(model, skin) {
+		this.nfkModel = { model: model, skin: skin };
+		this.assignModel();
+	}
+
+	// ASSIGNMODEL of NFK: a team game forces the team skin, a missing model falls back to sarge
+	assignModel() {
+		var teamSkin = null;
+		if (this.isTeamGame())
+			teamSkin = this.team == Constants.C_TEAMRED ? 'red' : this.team == Constants.C_TEAMBLUE ? 'blue' : 'default';
+		var drawn = Models.resolve(this.nfkModel.model, this.nfkModel.skin, teamSkin);
+		this.model = drawn.model;
+		this.modelColor = drawn.skin;
+		this.frame = 0;
+	}
+
 	setWeapon(weaponId) {
         // TODO: switch weapon only if exists
         for (var w in this.weapons) {
@@ -171,14 +187,15 @@ class Player {
             return;
 
         this.crouch = val;
-        this.graphics.updateModel();
     }
     setDead(val) {
         if (this.dead == val)
             return;
 
+        var wasDead = this.dead > 0;
         this.dead = val;
-        this.graphics.updateModel();
+        if (wasDead && val == 0)
+            this.mgun_lock = 1; // respawn: the weapon aims at once
         
         if (this.dead > 0) {
             Sound.playDeath(this);
@@ -214,12 +231,7 @@ class Player {
 		if (this.isSpectator())
 			this.follow = false;
 
-        this.setModel(this.model, team == Constants.C_TEAMRED 
-            ? 'red'
-            : team == Constants.C_TEAMBLUE
-                ? 'blue'
-                : Constants.C_TEAMNON);
-		this.graphics.updateModel();
+		this.assignModel();
 	}
 	
     setX(newX) {
@@ -308,15 +320,34 @@ class Player {
         }
     }
 
-    spinMachinegun() {
-        // resume weapon animation
-        var machinegun = this.weapons[Constants.C_WPN_MACHINE];
-        if (machinegun.sprite)
-            machinegun.sprite.play();
+    // STIME of NFK in milliseconds
+    stime() {
+        return this.ticks * 20;
+    }
+
+    // the player fires the machinegun: the barrel spins for 200 ms
+    machinegunFired() {
+        this.mgun_firets = this.stime() + 200;
     }
 
     // timers of a network player in playermove() of NFK and its gauntlet sound
     weaponTick() {
+        this.ticks++;
+        if (this.paintime > 0) this.paintime--;
+
+        // barrel spin of the machinegun
+        var stime = this.stime();
+        if (this.mgun_firets > stime) {
+            if (this.mgun_speed < 30) this.mgun_speed++;
+        } else if (this.mgun_speed > 0) {
+            this.mgun_speed--;
+        }
+        if (stime > this.mgun_frametimer && this.mgun_speed > 0) {
+            this.mgun_frametimer = stime + 70 - Utils.round(this.mgun_speed * 1.5);
+            this.mgun_spin++;
+            if (this.mgun_spin >= 6) this.mgun_spin = 0;
+        }
+
         if (this.shaftsttime > 0) this.shaftsttime--;
         if (this.gantl_s > 0) this.gantl_s--;
         if (this.item_quad_time > 0) this.item_quad_time--;
@@ -347,6 +378,11 @@ class Player {
 
     // PlayerAnim() of NFK for a network player: TESTPREDICT moves to x,y by a part of the distance each tick
     updateTestPredict(coordInterpolate) {
+        this.testPredict(coordInterpolate);
+        this.animTick();
+    }
+
+    testPredict(coordInterpolate) {
         if (coordInterpolate <= 0) {
             this.testX = this.x;
             this.testY = this.y;
@@ -366,6 +402,48 @@ class Player {
         // TOO BIG ERROR!
         if (Math.abs(Utils.trunc(this.x - this.testX)) >= 32) this.testX = this.x;
         if (Math.abs(Utils.trunc(this.y - this.testY)) >= 16) this.testY = this.y;
+    }
+
+    // PlayerAnim() walk animation and PlayerWeaponAnim() aim servo, once per tick
+    animTick() {
+        if (this.dead > 0)
+            return;
+        var params = Models.skin(this.model, this.modelColor);
+        var walking = this.dir == Constants.DIR_LW || this.dir == Constants.DIR_RW;
+
+        if (this.nextframe > 0) this.nextframe--;
+        if (walking && this.nextframe == 0) {
+            this.nextframe = (this.crouch ? params.crouchrefreshtime : params.framerefreshtime) - (this.item_haste > 0 ? 1 : 0);
+            var frames = this.crouch ? params.crouchframes : params.walkframes;
+            this.frame = this.frame < frames - 1 ? this.frame + 1 : 0;
+        }
+        if (walking) {
+            this.frm = 1 + this.frame;
+        } else {
+            this.frm = 0;
+            this.frame = this.crouch ? params.crouchstartframe : params.walkstartframe;
+        }
+
+        // aim servo of a network player
+        var left = this.dir == Constants.DIR_LW || this.dir == Constants.DIR_LS;
+        var zangle = this.nfkAngle;
+        if (left && zangle < 130) zangle -= 2;
+        if (!left) {
+            if (this.mgun_angle > 127) this.mgun_angle = 255 - this.mgun_angle;
+        } else {
+            if (this.mgun_angle <= 127) this.mgun_angle = 255 - this.mgun_angle;
+        }
+        var target = Utils.round(zangle) & 0xFF;
+        var fwd = (target - this.mgun_angle + 256) % 256;
+        var dist = fwd <= 128 ? fwd : 256 - fwd;
+        var step = Math.min(Utils.trunc(dist / 2), 6);
+        if (step == 0 || this.mgun_lock != 0) {
+            this.mgun_angle = target;
+            this.mgun_lock = 0;
+        } else {
+            this.mgun_angle = (fwd <= 128 ? this.mgun_angle + step : this.mgun_angle - step + 256) & 0xFF;
+        }
+        this.bodyangle = this.mgun_angle;
     }
 
     jump() {

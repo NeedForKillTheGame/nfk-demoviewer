@@ -1,5 +1,7 @@
 import Player from "./Player.js";
 import Sound from "./Sound.js";
+import Models from "./Models.js";
+import Gibs from "./Gibs.js";
 import Constants from "./Constants.js";
 import Utils from "./Utils.js";
 import Console from "./Console.js";
@@ -161,11 +163,6 @@ class Demo {
 						this.players[k].setCrouch(crouch);
 						this.players[k].BALLOON = ((demounit.PUV3B & Constants.PUV3B_BALLOON)==Constants.PUV3B_BALLOON) ? true : false;
 						
-						if ((this.players[k].dead == 0) && ((demounit.PUV3 & Constants.PUV3_DEAD1)==Constants.PUV3_DEAD1))
-							this.players[k].graphics.stop();
-						else
-							this.players[k].graphics.play();
-						
 						if ((this.players[k].dead > 0) && ((demounit.PUV3 & Constants.PUV3_DEAD0)==Constants.PUV3_DEAD0) && (this.players[k].rewardtime>0)) this.players[k].rewardtime = 0;
 						this.players[k].setWeaponAngle(demounit.wpnang);
 						this.players[k].fangle = demounit.wpnang * (180/128); // given angle is from 0 to 255, we convert it to 360 degrees notation
@@ -214,8 +211,8 @@ class Demo {
 				p.dir = demounit.dir;
 				p.dead = demounit.dead;
 				console.log(demounit);
-				var model = demounit.modelname.split('+');
-				p.setModel(model[0], model[1]);
+				var model = Models.parseName(demounit.modelname);
+				p.setModel(model.model, model.skin);
 				p.changeTeam(demounit.team);
 				console.log("player joined " + name);
 				break;
@@ -236,8 +233,8 @@ class Demo {
 					if (demounit.DXID == this.players[k].DXID)
 					{
 						console.log("changemodel ", demounit);
-						var model = demounit.newstr.split('+');
-						this.players[k].setModel(model[0], model[1]);
+						var model = Models.parseName(demounit.newstr);
+						this.players[k].setModel(model.model, model.skin);
 					}
 				}
 				break;
@@ -273,6 +270,11 @@ class Demo {
 						if (p.health <= 0)
 							p.clearPowerups();
 						Sound.playPain(p);
+						// GIB_DEATH: gibs (OPT_MEATLEVEL 1), then the blood of a player hit by a player
+						if (p.health <= -40)
+							Gibs.gib(this.g, p);
+						if (demounit.ext == 0)
+							Gibs.damageBlood(this.g, p, demounit.attwpn);
 					}
 				}
 				break;
@@ -364,6 +366,15 @@ class Demo {
 
 			
 			// door opened or closed, button pressed or released
+			case Constants.DDEMO_CORPSESPAWN:
+				for (var k = 0; k < this.players.length; k++) {
+					if (this.players[k].DXID == demounit.DXID) {
+						Gibs.spawnCorpse(this.g, this.players[k]);
+						break;
+					}
+				}
+				break;
+
 			case Constants.DDEMO_OBJCHANGESTATE:
 				this.g.map.changeObjectState(demounit.objindex, demounit.state);
 				break;

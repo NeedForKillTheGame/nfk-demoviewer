@@ -7,7 +7,7 @@ import Sound from "./Sound.js";
 // (Unit1.pas of nfk-reconstruction). One tick() = one DoMove() call = 1/50 sec.
 //
 // NFK draws through PowerDraw: an angle is 0..255 per full turn, scale 256 is 1:1 and a colour is $AABBGGRR.
-// Sprites that are missing in the viewer resources (smoke32b, shaft, railtrace, 8x8 shots) are approximated.
+// The sprites are the original images of graph.d and graph2.d of NFK 0.77 (images/nfk).
 
 var round = Utils.round;
 var trunc = Utils.trunc;
@@ -52,6 +52,29 @@ function rotation(units) {
 	return units * Math.PI * 2 / 256 - Math.PI / 2;
 }
 
+// pattern (frame) of a NFK image, patterns go by rows like in TAGFImage.SetPatternEx()
+var patterns = {};
+function pattern(g, name, index, width, height) {
+	var key = name + '/' + index;
+	if (!patterns[key]) {
+		var base = g.resources[name].texture.baseTexture;
+		var perRow = Math.floor(base.width / width);
+		patterns[key] = new PIXI.Texture(base,
+			new PIXI.Rectangle(index % perRow * width, Math.floor(index / perRow) * height, width, height));
+	}
+	return patterns[key];
+}
+
+// TexturedLine() of PowerDraw: a quad of 2 * halfWidth around the line, the texture height goes along the line
+function texturedLine(sprite, x1, y1, x2, y2) {
+	var length = Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+	sprite.visible = length > 0;
+	sprite.x = x1;
+	sprite.y = y1;
+	sprite.rotation = Math.atan2(y2 - y1, x2 - x1) - Math.PI / 2;
+	return length;
+}
+
 // base class of all weapon objects (aaa[] TMonoSprite in NFK)
 class Missile {
 	constructor(g, layer) {
@@ -74,13 +97,6 @@ class Missile {
 		(container || this.container()).addChild(sprite);
 		this.sprites.push(sprite);
 		return sprite;
-	}
-
-	addGraphics() {
-		var graphics = new PIXI.Graphics();
-		this.container().addChild(graphics);
-		this.sprites.push(graphics);
-		return graphics;
 	}
 
 	container() {
@@ -147,7 +163,7 @@ export class Rocket extends Missile {
 		this.frame = 0;
 
 		this.glow = this.addSprite(g.resources.glow.texture, true);
-		this.body = this.addSprite(g.resources.bullets.textures[bfg ? 'tile008.png' : 'tile005.png'], bfg);
+		this.body = this.addSprite(pattern(g, 'nfk_16x16', bfg ? 8 : 5, 16, 16), bfg); // Images[35]
 	}
 
 	tick() {
@@ -211,7 +227,7 @@ export class Rocket extends Missile {
 
 		if (!this.explosion) {
 			this.body.visible = false;
-			this.explosion = this.addSprite(this.g.resources.explosion.spritesheet.animations.explosion[0], true);
+			this.explosion = this.addSprite(pattern(this.g, 'nfk_explosion', 0, 32, 32), true);
 		}
 
 		// r_fx_explo
@@ -222,11 +238,15 @@ export class Rocket extends Missile {
 			this.glow.alpha = (255 - 4 * this.frame) / 255;
 		}
 
-		this.explosion.texture = this.g.resources.explosion.spritesheet.animations.explosion[trunc(this.frame / 4)];
+		this.explosion.texture = pattern(this.g, 'nfk_explosion', trunc(this.frame / 4), 32, 32);
 		this.draw(this.explosion, this.x, this.y, this.fangle, 256, this.bfg ? 0xFF55FF55 : undefined);
 
-		if (this.frame == 0)
+		if (this.frame == 0) {
 			Sound.play('expl');
+			// burn_med_mrk scorch under the bricks: black, alpha $57, fades out in r_markstime 30 secs
+			this.g.weapons.add(new Particle(this.g, this.x + random(8) - 4, this.y + random(8) - 4, 256, 0, 0x000000, 0x57,
+				Constants.FPS * 30, false, 0, this.g.resources.nfk_burn_med_mrk.texture));
+		}
 
 		this.frame++;
 	}
@@ -299,7 +319,7 @@ export class Grenade extends Rocket {
 		this.clippixel = 4;
 		this.imageindex = 255; // 5 secs before timeout
 		this.health = 0;
-		this.body.texture = g.resources.bullets.textures['tile006.png'];
+		this.body.texture = pattern(g, 'nfk_16x16', 6, 16, 16);
 	}
 
 	tick() {
@@ -433,7 +453,8 @@ export class RailTrail extends Missile {
 		this.fallt = color;
 		this.frame = 0;
 		this.dead = moving ? 0 : 1;
-		this.graphics = this.addGraphics();
+		this.beam = this.addSprite(g.resources.nfk_railtrace1.texture); // r_railstyle 0
+		this.beam.anchor.set(0.5, 0);
 	}
 
 	tick() {
@@ -442,7 +463,7 @@ export class RailTrail extends Missile {
 			this.dead = 1;
 			// rail impact mark, tinted with the player colour, under the bricks
 			this.g.weapons.add(new Particle(this.g, this.cx, this.cy, (6 + 4) * 6, 0, railColor(this.fallt), 0xDD,
-				Constants.FPS * 30, false, 0, this.g.resources.railhit.texture, 64)); // r_markstime 30 secs
+				Constants.FPS * 30, false, 0, this.g.resources.nfk_railhit.texture)); // r_markstime 30 secs
 			return;
 		}
 		if (this.frame >= 10) // rail_trailtime
@@ -451,21 +472,18 @@ export class RailTrail extends Missile {
 			this.frame++;
 	}
 
-	// RailPostTrace() with r_fx_rail 1 and progressive alpha. The alpha byte overflows at frame 0
-	// ((256 shl 24) = 0), so the first frame is invisible exactly like in NFK.
-	// The railtrace sprite beam is approximated with lines, beam width = (r_railwidth + 4) div 2.
+	// RailPostTrace() with r_fx_rail 1 and progressive alpha: the railtrace sprite stretched from (cx, cy) to (x, y),
+	// TexturedLine width (r_railwidth + 4) div 2. The alpha byte overflows at frame 0 ((256 shl 24) = 0),
+	// so the first frame is invisible exactly like in NFK.
 	trace() {
 		var a = (256 - round(255 * this.frame / 10)) & 0xFF;
-		var color = tint(railColor(this.fallt));
-		this.graphics.clear();
+		var halfWidth = trunc((6 + 4) / 2);
+		var length = texturedLine(this.beam, trunc(this.cx), trunc(this.cy), trunc(this.x), trunc(this.y));
+		this.beam.scale.set(halfWidth * 2 / this.beam.texture.width, length / this.beam.texture.height);
+		this.beam.tint = tint(railColor(this.fallt));
+		this.beam.alpha = a / 255;
 		if (a == 0)
-			return;
-		this.graphics.lineStyle(5, color, a / 255 / 2);
-		this.graphics.moveTo(trunc(this.cx), trunc(this.cy));
-		this.graphics.lineTo(trunc(this.x), trunc(this.y));
-		this.graphics.lineStyle(2, color, a / 255);
-		this.graphics.moveTo(trunc(this.cx), trunc(this.cy));
-		this.graphics.lineTo(trunc(this.x), trunc(this.y));
+			this.beam.visible = false;
 	}
 }
 
@@ -476,13 +494,24 @@ export class Shot extends Missile {
 		this.machinegun = machinegun;
 		this.cx = x + 4 - random(8);
 		this.cy = y + 4 - random(8);
+		this.x = x; // un-jittered impact, used for the solid-block gate
+		this.y = y;
 		this.frame = 0;
-		this.sprite = this.addSprite(g.resources.bullets.textures['tile000.png'], true); // r_transparentbulletmarks
+		this.sprite = this.addSprite(pattern(g, 'nfk_16x16', 0, 16, 16), true); // r_transparentbulletmarks
 	}
 
 	tick() {
 		var dir;
 		this.frame++;
+
+		// bullet_mrk decals under the bricks: two for the shotgun, one for the machinegun
+		if (this.frame == 1 && this.g.map.isBlock(trunc(round(this.x) / 32), trunc(round(this.y) / 16))) {
+			for (var i = 0; i < (this.machinegun ? 1 : 2); i++) {
+				this.g.weapons.add(new Particle(this.g, this.cx + random(8) - 4, this.cy + random(8) - 4, 256, 0, 0x000000, 0x57,
+					Constants.FPS * 30, false, 0, this.g.resources.nfk_bullet_mrk.texture));
+			}
+		}
+
 		if (this.frame <= 10) dir = 0;
 		else if (this.frame <= 20) dir = 1;
 		else {
@@ -490,18 +519,19 @@ export class Shot extends Missile {
 			if (this.frame > 30)
 				this.dead = 2;
 		}
-		this.sprite.texture = this.g.resources.bullets.textures['tile00' + dir + '.png'];
 		if (this.machinegun) {
-			// 8x8 sprite at (cx-4, cy-4), approximated with the shotgun one at half size
-			this.draw(this.sprite, trunc(this.cx), trunc(this.cy), null, 128);
+			// Images[36] 8x8 pattern 3+dir at (cx-4, cy-4)
+			this.sprite.texture = pattern(this.g, 'nfk_8x8', 3 + dir, 8, 8);
+			this.draw(this.sprite, trunc(this.cx), trunc(this.cy), null, 256);
 		} else {
-			// 16x16 sprite at (cx-4, cy-4)
+			// Images[35] 16x16 pattern dir at (cx-4, cy-4)
+			this.sprite.texture = pattern(this.g, 'nfk_16x16', dir, 16, 16);
 			this.draw(this.sprite, trunc(this.cx) + 4, trunc(this.cy) + 4, null, 256);
 		}
 	}
 }
 
-// smoke trail of rockets and grenades (SpawnSmoke with r_fx_smoke 1), the smoke32b sprite is approximated with the glow
+// smoke trail of rockets and grenades (SpawnSmoke with r_fx_smoke 1)
 export class Smoke extends Missile {
 	constructor(g, x, y) {
 		super(g, 0);
@@ -509,7 +539,7 @@ export class Smoke extends Missile {
 		this.y = y;
 		this.frame = 0;
 		this.fangle = random(255);
-		this.sprite = this.addSprite(g.resources.glow.texture, true);
+		this.sprite = this.addSprite(g.resources.nfk_smoke32b.texture, true);
 	}
 
 	tick() {
@@ -523,7 +553,7 @@ export class Smoke extends Missile {
 
 // TPartEngine element: alpha fades out during the lifetime, the scale changes each tick
 export class Particle extends Missile {
-	constructor(g, x, y, scale, scaleDelta, color, baseAlpha, ticks, additive, layer, texture, textureSize, velY) {
+	constructor(g, x, y, scale, scaleDelta, color, baseAlpha, ticks, additive, layer, texture, velY) {
 		super(g, layer ? 2 : 0);
 		this.x = x;
 		this.y = y;
@@ -535,8 +565,6 @@ export class Particle extends Missile {
 		this.life = ticks;
 		this.velY = velY || 0;
 		this.angle = random(255);
-		// the size of the original sprite, if the viewer has it in another size
-		this.textureScale = textureSize ? textureSize / (texture.width || textureSize) : 1;
 		this.sprite = this.addSprite(texture || g.resources.glow.texture, additive,
 			layer ? g.render.fxLayer : g.render.mapGraphics);
 		if (!layer) {
@@ -556,7 +584,7 @@ export class Particle extends Missile {
 	}
 
 	update() {
-		this.draw(this.sprite, round(this.x), round(this.y), this.angle, this.scale * this.textureScale, this.color);
+		this.draw(this.sprite, round(this.x), round(this.y), this.angle, this.scale, this.color);
 		this.sprite.alpha = round(this.baseAlpha * this.life / this.ticks) / 255;
 	}
 }
@@ -572,7 +600,12 @@ export class ShaftBeam extends Missile {
 		this.frame = 0;
 		this.fangle = angle || 0;
 		this.fallt = length || 0;
-		this.graphics = this.addGraphics();
+		// r_fx_shaft: one stretched quad of the graph2.d shaft image (Images[64])
+		var texture = g.resources.nfk_shaft.texture;
+		this.beam = new PIXI.TilingSprite(texture, texture.width, texture.height);
+		this.beam.anchor.set(0.5, 0);
+		this.container().addChild(this.beam);
+		this.sprites.push(this.beam);
 	}
 
 	tick() {
@@ -643,14 +676,17 @@ export class ShaftBeam extends Missile {
 				break;
 		}
 
-		// r_fx_shaft beam: the shaft sprite is approximated with lines
-		this.graphics.clear();
-		this.graphics.lineStyle(6, 0x00FFFF, 0.35);
-		this.graphics.moveTo(trunc(ox), trunc(oy));
-		this.graphics.lineTo(trunc(x), trunc(y));
-		this.graphics.lineStyle(2, 0xFFFFFF, 1);
-		this.graphics.moveTo(trunc(ox), trunc(oy));
-		this.graphics.lineTo(trunc(x), trunc(y));
+		// TexturedLine2Col(Images[64], ox, oy, x, y, PatternWidth div 5, ..) colour $FFFFFF00: the texture is stretched
+		// along the beam and scrolls by 1 px per 6 ms, so the energy flows from the player
+		var texture = this.beam.texture;
+		var halfWidth = trunc(texture.width / 5);
+		var length = texturedLine(this.beam, trunc(ox), trunc(oy), trunc(x), trunc(y));
+		var scroll = texture.height - trunc(performance.now() / 6) % texture.height;
+		this.beam.width = halfWidth * 2;
+		this.beam.height = length;
+		this.beam.tileScale.set(halfWidth * 2 / texture.width, length / texture.height);
+		this.beam.tilePosition.y = -scroll * this.beam.tileScale.y;
+		this.beam.tint = tint(0xFFFFFF00);
 	}
 
 	// checkclipplayer_rail_dude() (its y limit is uninitialized in NFK, 23 is taken from checkclipplayer_rail)
@@ -776,4 +812,4 @@ export class DroppedItem extends Missile {
 	}
 }
 
-export { cosTable, sinTable, angleIndex };
+export { Missile, pattern, rotation, cosTable, sinTable, angleIndex };

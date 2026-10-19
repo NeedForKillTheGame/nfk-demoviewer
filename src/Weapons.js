@@ -1,5 +1,6 @@
 import Constants from "./Constants.js";
 import Sound from "./Sound.js";
+import { ParticleEngine } from "./Gibs.js";
 import { Rocket, Plasma, Grenade, RailTrail, Shot, Smoke, Particle, ShaftBeam, DroppedItem, cosTable, sinTable, angleIndex } from "./Missiles.js";
 
 // Weapon events of a demo, ported from the demo playback of NFK 0.77: DEMOPLAREC() calls Fire*() procedures
@@ -9,6 +10,7 @@ class Weapons {
 	constructor(g) {
 		this.g = g;
 		this.missiles = []; // aaa[] objects of NFK
+		this.particles = new ParticleEngine(g); // blood droplets (ParticleEngine)
 	}
 
 	add(missile) {
@@ -40,6 +42,7 @@ class Weapons {
 		for (var i = 0; i < this.missiles.length; i++)
 			this.missiles[i].destroy();
 		this.missiles = [];
+		this.particles.clear();
 	}
 
 	findPlayer(DXID) {
@@ -130,7 +133,7 @@ class Weapons {
 		var p = this.findPlayer(d.spawnerDxid);
 		if (!p)
 			return;
-		p.spinMachinegun();
+		p.machinegunFired();
 		Sound.play('fire_mach');
 		this.quadSound(p);
 		this.add(new Shot(this.g, d.x, d.y, true));
@@ -154,7 +157,7 @@ class Weapons {
 		if (!p)
 			return;
 		if (d.subtype == 1) {
-			p.spinMachinegun();
+			p.machinegunFired();
 			this.add(new Shot(this.g, d.x, d.y, true));
 			Sound.play('fire_mach');
 		}
@@ -171,7 +174,7 @@ class Weapons {
 		var angle = angleIndex(p.nfkAngle * 360 / 255);
 		var velY = (-25 - Math.floor(Math.random() * 25)) / 75;
 		this.add(new Particle(this.g, p.x + cosTable[angle] * 20, p.y + weapony + sinTable[angle] * 20,
-			64, -0.33, 0xFFFFFF, 0x99, 30, true, 1, null, null, velY));
+			64, -0.33, 0xFFFFFF, 0x99, 30, true, 1, this.g.resources.nfk_smoke32b.texture, velY));
 	}
 
 	// DDEMO_KILLOBJECT: a missile exploded (or plasma disappeared) at the recorded point

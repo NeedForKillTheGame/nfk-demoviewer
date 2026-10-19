@@ -1,6 +1,7 @@
 import SpecialObject from "./SpecialObject.js";
 import Constants from "../Constants.js";
 import Sound from "../Sound.js";
+import Gibs from "../Gibs.js";
 import PIXI from "PIXI";
 
 // Door of a map. In a demo NFK does not run the door logic: the door is opened and closed only by
@@ -55,6 +56,11 @@ class Door extends SpecialObject {
 		this.nowanim = 6;
 		this.target = state;
 		Sound.play(state == 1 ? 'door_close' : 'door_open');
+		// a closing door kills the corpses in its region (object_region_touch)
+		if (state == 1 && this.orient == 0)
+			Gibs.doorClosed(this.g, this.col, this.row - 1, this.col + this.length + 1, this.row);
+		if (state == 1 && this.orient == 1)
+			Gibs.doorClosed(this.g, this.col, this.row, this.col, this.row + this.length + 1);
 	}
 
 	// MAPOBJ_think() of a door in the demo playback

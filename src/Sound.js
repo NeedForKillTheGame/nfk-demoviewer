@@ -1,5 +1,6 @@
 import Howl from "Howl";
 import Utils from "./Utils.js";
+import Models from "./Models.js";
 
 var sound_defs = {
 
@@ -16,6 +17,8 @@ var sound_defs = {
 
 
 	expl:	new Howl({ urls: ['sounds/expl.wav'] }),
+	gib1:	new Howl({ urls: ['sounds/gib1.wav'] }),
+	gib2:	new Howl({ urls: ['sounds/gib2.wav'] }),
 	bounce:	new Howl({ urls: ['sounds/BOUNCE.WAV'] }),
 	damage3:	new Howl({ urls: ['sounds/DAMAGE3.WAV'] }),
 	fire_bfg:	new Howl({ urls: ['sounds/bfg_fire.wav'] }),
@@ -62,17 +65,10 @@ var sound_defs = {
 	button:	new Howl({ urls: ['sounds/button.wav'] }),
 	door_open:	new Howl({ urls: ['sounds/DR1_STRT.WAV'] }),
 	door_close:	new Howl({ urls: ['sounds/DR1_END.WAV'] }),
-	
-	model_sound_path: 'sound/models/', // with slash at the end
-
-	models: {
-		sarge: getModelSounds('sarge'),
-		xaero: getModelSounds('xaero'),
-		keel: getModelSounds('keel'),
-		doom2: getModelSounds('doom2'),
-		crashed: getModelSounds('crashed'),
-	}
 }
+
+// sounds of the models are created on the first use of a model
+var model_sounds = {};
 function getModelSounds(model) {
 	return {
 		jump:    new Howl({ urls: ['sounds/models/' + model + '/jump1.wav'] }),
@@ -104,13 +100,16 @@ export default {
 		// do not play for inactive window
 		if (!document.hasFocus())
 			return;
-		if (!sound_defs.models[model]) {
+		if (!Models.list[model]) {
 			model = 'sarge';
 		}
-		sound_defs.models[model][soundId].volume(this.volume);
+		if (!model_sounds[model])
+			model_sounds[model] = getModelSounds(model);
+		var sound = model_sounds[model][soundId];
+		sound.volume(this.volume);
 		// play only if not playing now
-		if (sound_defs.models[model][soundId].pos() == 0)
-			sound_defs.models[model][soundId].play();
+		if (sound.pos() == 0)
+			sound.play();
 	},
 	
 	
@@ -125,6 +124,10 @@ export default {
 	},
 
 	playPain(player) {
+		// the death has its own sound; NFK plays a pain sound once per 25 ticks
+		if (player.health <= 0 || player.paintime > 0)
+			return;
+		player.paintime = 25;
 		var hp = 100;
 		if (player.health <= 25) {
 			hp = 25;

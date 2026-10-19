@@ -8,14 +8,5 @@ class WeaponGauntlet extends Weapon  {
 		super(g, player);
 
 		this.itemId = Constants.C_WPN_GAUNTLET;
-		this.offsetX = -1;
-		// sprite
-		this.texture = g.resources.gauntlet.spritesheet.animations.gauntlet;
-		this.animated = true;
-		this.frameStopped = 0;
-		this.frameStart = 1;
-		this.frameEnd = 3;
-		this.container = player.graphics.container;
-		this.offsetX = -8;
 	}
 }

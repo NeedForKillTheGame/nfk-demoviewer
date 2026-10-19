@@ -7,6 +7,10 @@ var keysState = {
 
     onKeyUp: function(keyCode, callback) {
         callbacks.push({ event: 'keyup', keyCode: keyCode, f: callback });
+    },
+
+    onKeyDown: function(keyCode, callback) {
+        callbacks.push({ event: 'keydown', keyCode: keyCode, f: callback });
     }
 };
 
@@ -39,7 +43,7 @@ document.addEventListener('keydown', e => {
 
         for (var i = 0; i < callbacks.length; i++) {
             if (callbacks[i].event == 'keydown' && e.keyCode == callbacks[i].keyCode) {
-                callbacks[i].f();
+                callbacks[i].f(e);
             }
         }
     }
@@ -72,7 +76,7 @@ document.addEventListener('keyup', e => {
 
         for (var i = 0; i < callbacks.length; i++) {
             if (callbacks[i].event == 'keyup' && e.keyCode == callbacks[i].keyCode) {
-                callbacks[i].f();
+                callbacks[i].f(e);
             }
         }
     }

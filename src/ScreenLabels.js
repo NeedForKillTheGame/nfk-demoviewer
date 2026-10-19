@@ -24,9 +24,8 @@ class ScreenLabels  {
 		this.stage.addChild(this.gameTime);
 
 
-		this.textUsage = new PIXI.Text("ESC = pause    TAB = score board", { fontFamily : 'Arial', fontSize: 12, fill : 'white', align : 'left' });
+		this.textUsage = new PIXI.Text("", { fontFamily : 'Arial', fontSize: 12, fill : 'white', align : 'left', lineHeight: 15 });
 		this.textUsage.x = 15;
-		this.textUsage.y = window.innerHeight - 20;
 		this.textUsage.alpha = 0.5;
 		this.stage.addChild(this.textUsage);
 
@@ -55,6 +54,18 @@ class ScreenLabels  {
 		}
 
 		this.gameTime.text = Utils.formatGameTime(this.g.gamestate.gametime);
+
+		// hotkeys in a column at the bottom left
+		this.textUsage.text = [
+			"ESC = pause",
+			"TAB = score board",
+			"+ / - = demo speed x" + (this.g.demoTicksPerSecond() / Constants.FPS).toFixed(2) + " (hold to change)",
+			"* = normal speed",
+			"1-8 = follow player",
+			"click = follow next player",
+			"~ = console"
+		].join("\n");
+		this.textUsage.y = this.g.render.app.screen.height - this.textUsage.height - 6;
 	}
 
 

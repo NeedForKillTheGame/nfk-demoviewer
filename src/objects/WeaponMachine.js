@@ -11,10 +11,5 @@ class WeaponMachine extends Weapon  {
 		this.ammo = 100; // max ammo
 		this.maxAmmo = 100; // init ammo
 
-		// sprite, the barrel spins when the player shoots
-		this.texture = g.resources.mgun.spritesheet.animations.mgun;
-		this.animated = true;
-		this.animateOneTime = () => {};
-		this.container = player.graphics.container;
 	}
 }
