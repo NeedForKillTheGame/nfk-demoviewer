@@ -216,6 +216,23 @@ class Map {
     isBrick(row, col) {
         return row >= this.rows || col >= this.cols || row < 0 || col < 0 || this.bricks[row][col] > 53;
     }
+
+	// solid brick for the player physics (TBrick.block in NFK): bricks, the invisible "empty" brick 37
+	// and the map border, which NFK makes solid on map load
+	isBlock(col, row) {
+		if (col <= 0 || row <= 0 || col >= this.rows - 1 || row >= this.cols - 1)
+			return true;
+		var b = this.bricks[col][row];
+		return b > 53 || b == Constants.IT_EMPTY;
+	}
+
+	// water or lava brick (IsWaterContent() in NFK)
+	isWater(col, row) {
+		if (col < 0 || row < 0 || col >= this.rows || row >= this.cols)
+			return false;
+		var b = this.bricks[col][row];
+		return b == Constants.IT_WATER || b == Constants.IT_LAVA;
+	}
 	
 	getBrick(row, col) {
 		return this.bricks[row][col];

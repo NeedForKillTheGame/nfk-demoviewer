@@ -1,20 +1,25 @@
 import Constants from "./Constants.js";
-import Sound from "./Sound.js";
-import Map from "./Map.js";
 import Utils from "./Utils.js";
 import Console from "./Console.js";
 
-//Вынесем константы из объекта Constants в отедельные константы, чтобы не писать везде Constants.<название_константы>
+// Physics repeats playerphysic() and the player movement of playermove() from the original NFK line by line.
+// Source: Unit1.pas of https://github.com/NeedForKillTheGame/nfk-reconstruction (NFK 0.77 sources,
+// its playermove is byte-identical to NFK.exe 0.77). The same port lives in nfk-web.
+
 const PLAYER_MAX_VELOCITY_X = Constants.PLAYER_MAX_VELOCITY_X;
 
-		
-//Вынесем указатель на функцию в отедельную переменную, чтобы не писать везде Map.isBrick(...)
 var trunc = Utils.trunc;
+var round = Utils.round;
+var fround = Math.fround || function (val) { return val; };
+
+// 0.75 strafe-jump tables, indexed by player.speedJump. They are "single" in NFK, hence fround()
+var strafeTableX = [0, 0.33, 0.8, 1.1, 1.4, 1.8, 2.2].map(fround);
+var strafeTableY = [0, 0, 0.4, 0.8, 1.0, 1.2, 1.4].map(fround);
 
 var logLine = 0;
 var textarea = document.getElementById('log');
 var newText = '';
-		
+
 export default
 class PlayerPhysics {
 	constructor(g, player) {
@@ -24,312 +29,230 @@ class PlayerPhysics {
 
 		this.defx = 0;
 		this.defy = 0;
-
-		this.tmpCol = 0;
-		this.tmpY = 0;
-		this.tmpSpeedX = 0;
-		
-		
-		
-		this.tmpAbsMaxVelocityX = 0;
-		this.tmpSign = 0;
-		this.velocityYSpeedJump = [0, 0, 0.4, 0.8, 1.0, 1.2, 1.4];
-		this.velocityXSpeedJump = [0, 0.33, 0.8, 1.1, 1.4, 1.8, 2.2];
-		this.tmpLastWasJump = false;
-		this.tmpCurJump = false;
-		this.speedJumpDirection = 0;
-		this.tmpLastKeyUp = false;
-		this.tmpDjBonus = 0;
-		
-		
-
-		this.time = 0;
-		this.tmpDeltaTime = 0;
-		this.tmpDeltaPhysicFrames = 0;
-
 	}
 
+	// bbb[col, round(y) div 16].block
+	hasWall(col, y) {
+		return this.map.isBlock(col, trunc(round(y) / 16));
+	}
 
-	playerphysic(player) {
+	playerphysic() {
 		// --!-!-!=!=!= ULTIMATE 3d[Power]'s PHYSIX M0DEL =!=!=!-!-!--
+		var player = this.player;
+		var tmpCol, tmpY;
 
-		this.defx = this.player.x;
-		this.defy = this.player.y;
-		this.player.velocityY = this.player.velocityY + 0.056;
+		this.defx = player.x;
+		this.defy = player.y;
+		player.velocityY = player.velocityY + 0.056; // Gravity*2.80
 
-		if (this.player.velocityY > -1 && this.player.velocityY < 0) {
-			this.player.velocityY /= 1.11; // progressive inertia
+		if (player.velocityY > -1 && player.velocityY < 0) {
+			player.velocityY /= 1.11; // progressive inertia
 		}
-		if (this.player.velocityY > 0 && this.player.velocityY < 5) {
-			this.player.velocityY *= 1.1; // progressive inertia
+		if (player.velocityY > 0 && player.velocityY < 5) {
+			player.velocityY *= 1.1; // progressive inertia
 		}
 
-		if (this.player.velocityX < -0.2 || this.player.velocityX > 0.2) {
-			if (this.player.keyLeft === this.player.keyRight) {
-				//No active key left/right pressed
-				if (this.player.isOnGround()) {
-					this.player.velocityX /= 1.14;    // ongroud stop speed.
+		if (player.velocityX < -0.2 || player.velocityX > 0.2) {
+			// slow down only if the player stands (dir 2 or 3): no left/right key in the previous frame
+			if (player.dir > Constants.DIR_RW) {
+				if (player.isOnGround()) {
+					player.velocityX /= 1.14;    // ongroud stop speed.
 				}
 				else {
-					this.player.velocityX /= 1.025;   // inair stopspeed.
+					player.velocityX /= 1.025;   // inair stopspeed.
 				}
 			}
 		} else {
 			//completelly stop if velocityX less then 0.2
-			this.player.velocityX = 0;
+			player.velocityX = 0;
 		}
 
-		if (this.player.velocityX !== 0) {
-			this.tmpSpeedX = (this.player.velocityX < 0 ? -1 : 1) * this.velocityXSpeedJump[this.player.speedJump];
-		} else {
-			this.tmpSpeedX = 0;
+		if (player.dead > 0 && player.isOnGround()) {
+			player.velocityX /= 1.03;   // corpse stop speed.
 		}
-		this.player.setXY(this.player.x + this.player.velocityX + this.tmpSpeedX, this.player.y + this.player.velocityY);
+
+		player.x = player.x + player.velocityX;
+		player.y = player.y + player.velocityY;
+
+		// 0.75: airborne resets the grounded-frames counter
+		if (!player.isOnGround()) {
+			player.groundTicks = 0;
+		}
 
 		// wall CLIPPING
-		if (this.player.crouch) {
-			//VERTICAL CHECNING WHEN CROUCH FIRST
-			if (this.player.isOnGround() && (this.player.isBrickCrouchOnHead() || this.player.velocityY > 0)) {
-				this.player.velocityY = 0;
-				this.player.setY(trunc(Math.round(this.player.y) / 16) * 16 + 8);
-			} else if (this.player.isBrickCrouchOnHead() && this.player.velocityY < 0) {      // fly up
-				this.player.velocityY = 0;
-				this.player.doublejumpCountdown = 3;
-				this.player.setY(trunc(Math.round(this.player.y) / 16) * 16 + 8);
+		if (player.crouch) {
+			//VERTICAL CHECKING when crouch goes first
+			if (player.isBrickCrouchOnHead() && player.isOnGround()) {
+				player.velocityY = 0;
+				player.y = trunc(round(player.y) / 16) * 16 + 8;
+			} else if (player.isBrickCrouchOnHead() && player.velocityY < 0) {      // fly up
+				player.velocityY = 0;
+				player.doublejumpCountdown = 3;
+				player.y = trunc(round(player.y) / 16) * 16 + 8;
+			} else if (player.isOnGround() && player.velocityY > 0) {
+				player.velocityY = 0;
+				player.y = trunc(round(player.y) / 16) * 16 + 8;
 			}
 		}
 
-		// HORZ CHECK
-		if (this.player.velocityX != 0) {
-			this.tmpCol = trunc(Math.round(this.defx + (this.player.velocityX < 0 ? -11 : 11)) / 32);
-			this.tmpY = this.player.crouch ? this.player.y : this.defy;
-			if (
-				this.map.isBrick(this.tmpCol, trunc(Math.round(this.tmpY - (this.player.crouch ? 8 : 16)) / 16))
-				|| this.map.isBrick(this.tmpCol, trunc(Math.round(this.tmpY) / 16))
-				|| this.map.isBrick(this.tmpCol, trunc(Math.round(this.tmpY + 16) / 16))
-			) {
-				this.player.setX(trunc(this.defx / 32) * 32 + (this.player.velocityX < 0 ? 9 : 22));
-				this.player.velocityX = 0;
-				this.player.speedJump = 0;
-				if (this.defx != this.player.x) {
-					this.log('wall', this.player);
-				}
+		// HORZ CHECK: crouching player is checked at the new y (y-8, y, y+16), standing one at the old y (y-16, y, y+16)
+		tmpY = player.crouch ? player.y : this.defy;
+		if (player.velocityX < 0) {
+			tmpCol = trunc(round(this.defx - 10) / 32);
+			if (this.hasWall(tmpCol, tmpY - (player.crouch ? 8 : 16)) || this.hasWall(tmpCol, tmpY) || this.hasWall(tmpCol, tmpY + 16)) {
+				player.x = trunc(this.defx / 32) * 32 + 9;
+				player.velocityX = 0;
+				player.speedJump = 0;   // 0.75: wall hit kills strafe charge
+			}
+		}
+		if (player.velocityX > 0) {
+			tmpCol = trunc(round(this.defx + 10) / 32);
+			if (this.hasWall(tmpCol, tmpY - (player.crouch ? 8 : 16)) || this.hasWall(tmpCol, tmpY) || this.hasWall(tmpCol, tmpY + 16)) {
+				player.x = trunc(this.defx / 32) * 32 + 22;
+				player.velocityX = 0;
+				player.speedJump = 0;   // 0.75: wall hit kills strafe charge
 			}
 		}
 
 		//Vertical check again after x change
-		if (this.player.isOnGround() && (this.player.isBrickOnHead() || this.player.velocityY > 0)) {
-			this.player.velocityY = 0;
-			this.player.setY(trunc(Math.round(this.player.y) / 16) * 16 + 8);
-		} else if (player.isBrickOnHead() && this.player.velocityY < 0) {
+		if (player.isBrickOnHead() && player.isOnGround()) {
+			player.velocityY = 0;
+			player.y = trunc(round(player.y) / 16) * 16 + 8;
+		} else if (player.isBrickOnHead() && player.velocityY < 0) {
 			// fly up
-			this.player.velocityY = 0;
-			this.player.doublejumpCountdown = 3;
+			player.velocityY = 0;
+			player.doublejumpCountdown = 3;
+			player.y = trunc(round(player.y) / 16) * 16 + 8;
+		} else if (player.isOnGround() && player.velocityY > 0) {
+			player.velocityY = 0;
+			if (player.groundTicks < 255) {
+				player.groundTicks++; // 0.75: count grounded frames
+			}
+			player.y = trunc(round(player.y) / 16) * 16 + 8;
 		}
 
-		if (this.player.velocityX < -5)  this.player.velocityX = -5;
-		if (this.player.velocityX > 5)  this.player.velocityX = 5;
-		if (this.player.velocityY < -5) this.player.velocityY = -5;
-		if (this.player.velocityY > 5)  this.player.velocityY = 5;
+		// WATER\LAVA MOVEMENT
+		if (player.isInWater()) {
+			if (player.velocityY < -1) player.velocityY = -1;
+			if (player.velocityY > 1)  player.velocityY = 1;
+			if (player.velocityX < -2) player.velocityX = -2;
+			if (player.velocityX > 2)  player.velocityX = 2;
+		} else {
+			if (player.velocityY < -5) player.velocityY = -5;
+			if (player.velocityY > 5)  player.velocityY = 5;
+			if (player.velocityX < -5) player.velocityX = -5;
+			if (player.velocityX > 5)  player.velocityX = 5;
+		}
+
+		if (player.y > 16 * 250) player.y = 16 * 250 - 16;
 	}
 
-
-	
-	
-	
+	// one game tick (1/50 sec) of the player
 	playermove() {
+		var player = this.player;
+		var speed;
 
-		this.playerphysic(this.player);
+		this.playerphysic();
 
-		if (this.player.doublejumpCountdown > 0) {
-			this.player.doublejumpCountdown--;
-		}
-
-		if (this.player.isOnGround()) {
-			this.player.velocityY = 0;  // really nice thing :)
-		}
-
-		// do not handle keys for demo
+		// players of a demo are network objects in NFK: their position, inertia, direction and crouch come
+		// from the demo, and NFK runs only playerphysic() for them between the demo position updates
 		if (this.g.demo)
 			return;
 
-		this.tmpCurJump = false;
-
-		if (this.player.speedJump > 0
-			&& (this.player.keyUp !== this.tmpLastKeyUp
-			|| this.player.keyLeft && this.speedJumpDirection !== -1
-			|| this.player.keyRight && this.speedJumpDirection !== 1)
-		) {
-			this.player.speedJump = 0;
-			this.log('sj 0 - change keys', this.player);
+		if (player.doublejumpCountdown > 0) {
+			player.doublejumpCountdown--;
 		}
 
-		this.tmpLastKeyUp = this.player.keyUp;
+		if (player.isOnGround()) {
+			player.velocityY = 0;  // really nice thing :)
+		}
 
-		if (this.player.keyUp) {
+		// Holding the jump key jumps again on every landing, NFK has no "key released" check.
+		// Swimming up and the flight powerup branches of NFK are skipped.
+		// isDoubleJumpPossible() of NFK always returns false, so only isOnGround() matters.
+		if (player.keyUp && player.isOnGround() && !player.isBrickOnHead()) {
 			// JUMP!
-			if (this.player.isOnGround() && !this.player.isBrickOnHead() && !this.tmpLastWasJump) {
+			// 0.75 strafe-jump charge: jumped again within 5 frames after landing
+			if (player.groundTicks < 5 && player.speedJump < 6) {
+				player.speedJump++;
+				this.log('increase sj');
+			}
+			player.groundTicks = 255;
 
-				if (this.player.doublejumpCountdown > 4 && this.player.doublejumpCountdown < 11) {
-					// double jumpz
-					this.player.doublejumpCountdown = 14;
-					this.player.velocityY = -3;
-
-					if (this.player.velocityX !== 0) {
-						this.tmpSpeedX = Math.abs(this.player.velocityX) + this.velocityXSpeedJump[this.player.speedJump];
-					} else {
-						this.tmpSpeedX = 0;
-					}
-
-					if (this.tmpSpeedX > 3) {
-						this.tmpDjBonus = this.tmpSpeedX - 3;
-						this.player.velocityY -= this.tmpDjBonus;
-						this.log('dj higher (bonus +' + this.round(this.tmpDjBonus) + ')', this.player);
-					} else {
-						this.log('dj standart', this.player);
-					}
-					this.player.setCrouch(false);
-					Sound.jump();
-
-					//this.player.velocityY += this.velocityYSpeedJump[this.player.speedJump];
-				} else {
-					if (this.player.doublejumpCountdown === 0) {
-						this.player.doublejumpCountdown = 14;
-						Sound.jump();
-					}
-					this.player.velocityY = -2.9;
-					this.player.velocityY += this.velocityYSpeedJump[this.player.speedJump];
-
-					this.log('jump', player);
-
-					if (this.player.speedJump < 6 && !this.tmpLastWasJump && this.player.keyLeft !== this.player.keyRight) {
-						this.speedJumpDirection = this.player.keyLeft ? -1 : 1;
-						this.player.speedJump++;
-						this.log('increase sj', this.player);
-					}
+			if (player.doublejumpCountdown > 4) {
+				// double jumpz
+				player.doublejumpCountdown = 14;
+				player.velocityY = -3;
+				player.setCrouch(false);
+				this.log('dj');
+			} else {
+				if (player.doublejumpCountdown === 0) {
+					player.doublejumpCountdown = 14;
+					player.jump();
 				}
-
-				this.tmpCurJump = true;
+				player.velocityY = -2.9; // simplephysics 1 (default in 0.77), it is -2 with simplephysics 0
+				this.log('jump');
 			}
-		} else {
-			if (this.player.isOnGround() && this.player.speedJump > 0 && !this.player.keyDown) {
-				this.player.speedJump = 0;
-				this.log('sj 0 - on ground', this.player);
+			player.velocityY += strafeTableY[player.speedJump]; // 0.75 strafe-jump boost
+		}
+
+		// CROUCH
+		if (!player.keyUp) {
+			if (player.keyDown) {
+				if (player.isOnGround()) {
+					player.setCrouch(true);
+				}
+			} else if (!player.isBrickCrouchOnHead()) {
+				player.setCrouch(false);
 			}
 		}
 
-	// CROUCH
-		if (!this.player.keyUp && this.player.keyDown) {
-			if (this.player.isOnGround()) {
-				this.player.setCrouch(true);
-			}
-			else if (!this.player.isBrickCrouchOnHead()) {
-				this.player.setCrouch(false);
-			}
-		} else {
-			this.player.setCrouch(this.player.isOnGround() && this.player.isBrickCrouchOnHead());
+		if (!player.isBrickCrouchOnHead() && !player.isOnGround()) {
+			player.setCrouch(false);
 		}
 
-		this.tmpLastWasJump = this.tmpCurJump;
-
-		if (this.player.keyLeft !== this.player.keyRight) {
-			//One of the keys pressed - left or right, starting calculation
-			this.tmpAbsMaxVelocityX = PLAYER_MAX_VELOCITY_X;
-			if (this.player.crouch) {
-				this.tmpAbsMaxVelocityX--;
-			}
-
-			//While moving left - speed should be negative value
-			this.tmpSign = this.player.keyLeft ? -1 : 1;
-
-			if (this.player.velocityX * this.tmpSign < 0) {
-				//We are currently moving in opposite direction
-				//So we make a fast turn with 0.8 acceleration
-				this.player.velocityX += this.tmpSign * 0.8;
-			}
-
-			var absVelocityX = Math.abs(this.player.velocityX);
-			if (absVelocityX < this.tmpAbsMaxVelocityX) {
-				//We are not at the maximum speed yet, continue acceleration
-				this.player.velocityX += this.tmpSign * 0.35;
-			} else if (absVelocityX > this.tmpAbsMaxVelocityX) {
-				//Somehow we are out of the speed limit. Let's limit it!
-				this.player.velocityX = this.tmpSign * this.tmpAbsMaxVelocityX;
-			}
-		}
-	}
-
-	
-	
-	
-	
-	
-		
-		
-	runPhysicsOneFrame(player) {
-
-		//Стратегия расчёта физики следующая:
-		//Используя текущие значения скорости (расчитанные в предыдущем кадре) сделаем перемещение игрока
-		//Проверим столкновения со стенами, сделаем корректировку позиции игрока, если он провалился внутрь какой-нибудь стены
-		//Перед обновлением позиции игрока запомним старые значения колонки
-		this.playermove();
-	}
-	
-	updateGame(timestamp) {
-
-		if (this.time === 0) {
-			//Это первый запуск функции, начальное время игры ещё не было установлено
-			//Установим это время на 16мс назад, чтобы просчитать физику одного физического фрейма
-			this.time = timestamp - 16;
+		// dir of the current frame is used by the next frame friction in playerphysic()
+		if (player.dir < 2) {
+			player.dir += 2;
 		}
 
-		//Физика основана на константах из NFK
-		//В NFK физика была привзяна к FPS=50, поэтому вск константы были из расчёта FPS=50
-		//В новой реализации физика не должна быть привязана к FPS выдаваемому компьютером, а будет привязана к времени
-		//Сделаем расчёт исходя из 60 FPS (т.е. игра будет чуть быстрее, чем оригинальная): 1сек/60 = 16мили секунд
-		//Чтобы сохранить все старые константы, почитаем какое перемещение нужно сделать за реально прошедшее время deltaTime?
-		this.tmpDeltaTime = timestamp - this.time;
-		//Назовём 20милисекундный интервал "физическим фреймом"
-		//Посчитаем, сколько физических фреймов прошло за delltaTime?
-		this.tmpDeltaPhysicFrames = trunc(this.tmpDeltaTime / 16);
-		if (this.tmpDeltaPhysicFrames === 0) {
-			//Ещё не накопилось достаточно времени, чтобы начёт расчёт хотя бы одного физического фрейма!
-			//Прерываем выполнение функции
-			return false;
+		if (player.keyLeft && player.keyRight) {
+			player.speedJump = 0;   // 0.75: left+right cancels strafe charge
+			return;
 		}
 
-		//Сдвинем указатель time вперёд на нужно число физических фреймов для следующей итерации
-		this.time += this.tmpDeltaPhysicFrames * 16.6;
+		// 0.75: bleed off strafe charge when slow, or after being grounded a while
+		if ((Math.abs(player.velocityX) < 3.0 || player.groundTicks > 5 && player.groundTicks < 150) && player.speedJump > 0) {
+			player.speedJump--;
+		}
 
-		//Есть один или несколько физических фреймов, которые нужно общитать в физической модели, сделаем это в цикле
-		if (this.tmpDeltaPhysicFrames === 1) {
-			//В большинстве случаев фрейм будет ровно один, так что для производительности рассмотрим этот вариант отдельно
-			this.runPhysicsOneFrame();
-		} else {
-			//Нужно сделать несколько перемещений в цикле
-			while (this.tmpDeltaPhysicFrames > 0) {
-				this.runPhysicsOneFrame();
-				this.tmpDeltaPhysicFrames--;
-			}
+		if (player.keyLeft) {
+			speed = player.crouch ? PLAYER_MAX_VELOCITY_X - 1 : fround(PLAYER_MAX_VELOCITY_X + strafeTableX[player.speedJump]);
+
+			if (player.velocityX > 0) player.velocityX -= 0.8; // fast turn
+			if (player.velocityX > -speed) player.velocityX -= 0.35;
+			if (player.velocityX < -speed) player.velocityX = -speed;
+			player.dir = Constants.DIR_LW;
+		}
+
+		if (player.keyRight) {
+			speed = player.crouch ? PLAYER_MAX_VELOCITY_X - 1 : fround(PLAYER_MAX_VELOCITY_X + strafeTableX[player.speedJump]);
+
+			if (player.velocityX < 0) player.velocityX += 0.8; // fast turn
+			if (player.velocityX < speed) player.velocityX += 0.35;
+			if (player.velocityX > speed) player.velocityX = speed;
+			player.dir = Constants.DIR_RW;
 		}
 	}
-
-	
-	
 
 	log(text) {
 		logLine++;
-		if (this.player.velocityX !== 0) {
-			this.tmpSpeedX = (this.player.velocityX < 0 ? -1 : 1) * this.velocityXSpeedJump[pthis.layer.speedJump];
-		} else {
-			this.tmpSpeedX = 0;
-		}
 		newText = logLine
 			+ ' '
 			+ text
 			+ ' (x: ' + this.round(this.player.x)
 			+ ', y: ' + this.round(this.player.y)
-			+ ', dx: ' + this.round(this.tmpSpeedX)
+			+ ', dx: ' + this.round(this.player.velocityX)
 			+ ', dy: ' + this.round(this.player.velocityY)
 			+ ', sj: ' + this.player.speedJump
 			+ ')';
@@ -340,5 +263,5 @@ class PlayerPhysics {
 	round(val) {
 		return trunc(val) + '.' + Math.abs(trunc(val * 10) - trunc(val) * 10)
 	}
-	
+
 }

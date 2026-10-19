@@ -3,7 +3,6 @@ import Constants from "./Constants.js";
 import Keyboard from "./Keyboard.js";
 import Player from "./Player.js";
 import {renderGame} from "./Render.js";
-import {updateGame} from "./Physics.js";
 import Stats from "Stats";
 import Demo from "./Demo.js";
 import Sound from "./Sound.js";
@@ -91,6 +90,47 @@ async function init()
 	*/
 
 	var gametic = 0;
+
+	// one game tick of NFK (1/50 sec): physics of players, then the demo frames of this tick, like DXTimerTimer
+	function gameTick() {
+		for (var i = 0; i < G.players.length; i++)
+		{
+			if (G.players[i].isSpectator())
+				continue;
+
+			// player physics
+			G.players[i].physics.playermove();
+
+			// handle objects collisions with a player
+			for (var k = 0; k < G.objects.length; k++) {
+				G.objects[k].handleCollisions(G.players[i]);
+			}
+		}
+
+		for (var i = 0; i < G.map.brickObjects.length; i++)
+		{
+			// handle objects collisions with a brick
+			for (var k = 0; k < G.objects.length; k++) {
+				G.objects[k].handleBrickCollisions(G.map.brickObjects[i]);
+			}
+		}
+
+		// if end of demo then return from the function (it will stop infinite loop)
+		//if ( !G.demo.nextFrame(gametic) )
+		//	return;
+		// FIXME: a new feature to rewind a demo is available, so don't break app when demo ends
+		G.demo.nextFrame(gametic);
+		
+		// this must be after G.demo.nextFrame(), to handle gametic = 0
+		if (++gametic >= Constants.FPS)
+			gametic = 0;
+
+		G.timerManager.tick();
+	}
+
+	// the game runs at fixed 50 ticks per second (NFK physics constants are per tick) independently of the browser FPS
+	var tickTime = 1000 / Constants.FPS;
+	var time = 0; // time of the next game tick
 	function gameLoop(timestamp) {
 		stats.begin();
 
@@ -102,44 +142,24 @@ async function init()
 		// if game not paused
 		if (!G.gamestate.paused)
 		{
-			for (var i = 0; i < G.players.length; i++)
-			{
-				if (G.players[i].isSpectator())
-					continue;
+			if (time === 0)
+				time = timestamp;
 
-				// player physics
-				G.players[i].physics.updateGame(timestamp);
+			// do not catch up a long break (a hidden browser tab does not call requestAnimationFrame)
+			if (timestamp - time > tickTime * Constants.FPS)
+				time = timestamp;
 
-				// handle objects collisions with a player
-				for (var k = 0; k < G.objects.length; k++) {
-					G.objects[k].handleCollisions(G.players[i]);
-				}
-			}
-
-			for (var i = 0; i < G.map.brickObjects.length; i++)
-			{
-				// handle objects collisions with a brick
-				for (var k = 0; k < G.objects.length; k++) {
-					G.objects[k].handleBrickCollisions(G.map.brickObjects[i]);
-				}
+			while (timestamp >= time) {
+				gameTick();
+				time += tickTime;
 			}
 
 			// for debug
 			if (G.config.mech) {
 				G.render.renderMech();			
 			}
-
-			// if end of demo then return from the function (it will stop infinite loop)
-			//if ( !G.demo.nextFrame(gametic) )
-			//	return;
-			// FIXME: a new feature to rewind a demo is available, so don't break app when demo ends
-			G.demo.nextFrame(gametic);
-			
-			// this must be after G.demo.nextFrame(), to handle gametic = 0
-			if (++gametic >= Constants.FPS)
-				gametic = 0;
-
-			G.timerManager.tick();
+		} else {
+			time = 0;
 		}
 
 		// player graphics (after physics of all players, so the camera follows the actual position)

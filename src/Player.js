@@ -67,10 +67,8 @@ class Player {
 
 
         this.doublejumpCountdown = 0;
-        this.cacheOnGround = false;
-        this.cacheBrickOnHead = false;
-        this.cacheBrickCrouchOnHead = false;
-        this.speedJump = 0;
+        this.groundTicks = 0; // TPlayer.field_358: frames on the ground since landing, 255 right after a jump
+        this.speedJump = 0;   // TPlayer.field_359: strafe-jump charge 0..6
 		
 		this.graphics = null; // PlayerGraphics	obj	
 		this.physics = null; // PlayerPhysics obj	
@@ -226,25 +224,16 @@ class Player {
 	}
 	
     setX(newX) {
-        if (newX != this.x) {
-            this.x = newX;
-            this.updateCaches();
-        }
+        this.x = newX;
     }
 
     setY(newY) {
-        if (newY != this.y) {
-            this.y = newY;
-            this.updateCaches();
-        }
+        this.y = newY;
     }
 
     setXY(newX, newY) {
-        if (newX !== this.x || newY !== this.y) {
-            this.x = newX;
-            this.y = newY;
-            this.updateCaches();
-        }
+        this.x = newX;
+        this.y = newY;
     }
 
     addPowerup(itemId) {
@@ -272,69 +261,56 @@ class Player {
         Sound.playModel(this.model, 'jump');
     }
 
-    updateCaches() {
-        this.updateCacheOnGround();
-        this.updateCacheBrickOnHead();
-        this.updateCacheBrickCrouchOnHead();
-    }
-
-    updateCacheOnGround() {
-        this.cacheOnGround =
-            this.map.isBrick(Utils.trunc((this.x - 9) / 32), Utils.trunc((this.y + 25) / 16))
-            && !this.map.isBrick(Utils.trunc((this.x - 9) / 32), Utils.trunc((this.y + 23) / 16))
-
-            || this.map.isBrick(Utils.trunc(Utils.trunc(this.x + 9) / 32), Utils.trunc(Utils.trunc(this.y + 25) / 16))
-            && !this.map.isBrick(Utils.trunc(Utils.trunc(this.x + 9) / 32), Utils.trunc(Utils.trunc(this.y + 23) / 16))
-
-            || this.map.isBrick(Utils.trunc((this.x - 9) / 32), Utils.trunc((this.y + 24) / 16))
-            && !this.map.isBrick(Utils.trunc((this.x - 9) / 32), Utils.trunc((this.y + 8) / 16))
-
-            || this.map.isBrick(Utils.trunc((this.x + 9) / 32), Utils.trunc((this.y + 24) / 16))
-            && !this.map.isBrick(Utils.trunc((this.x + 9) / 32), Utils.trunc((this.y + 8) / 16));
-    }
-
-    updateCacheBrickCrouchOnHead() {
-        this.cacheBrickCrouchOnHead =
-            this.map.isBrick(Utils.trunc((this.x - 8) / 32), Utils.trunc((this.y - 9) / 16))
-            && !this.map.isBrick(Utils.trunc((this.x - 8) / 32), Utils.trunc((this.y - 7) / 16))
-
-            || this.map.isBrick(Utils.trunc((this.x + 8) / 32), Utils.trunc((this.y - 9) / 16))
-            && !this.map.isBrick(Utils.trunc((this.x + 8) / 32), Utils.trunc((this.y - 7) / 16))
-
-            || this.map.isBrick(Utils.trunc((this.x - 8) / 32), Utils.trunc((this.y - 23) / 16))
-
-            || this.map.isBrick(Utils.trunc((this.x + 8) / 32), Utils.trunc((this.y - 23) / 16))
-
-            || this.map.isBrick(Utils.trunc((this.x - 8) / 32), Utils.trunc((this.y - 16) / 16))
-
-            || this.map.isBrick(Utils.trunc((this.x + 8) / 32), Utils.trunc((this.y - 16) / 16));
-    }
-
-    updateCacheBrickOnHead() {
-        this.cacheBrickOnHead =
-            this.map.isBrick(Utils.trunc((this.x - 9) / 32), Utils.trunc((this.y - 25) / 16))
-            && !this.map.isBrick(Utils.trunc((this.x - 9) / 32), Utils.trunc((this.y - 23) / 16))
-
-            || this.map.isBrick(Utils.trunc((this.x + 9) / 32), Utils.trunc((this.y - 25) / 16))
-            && !this.map.isBrick(Utils.trunc((this.x + 9) / 32), Utils.trunc((this.y - 23) / 16))
-
-            || this.map.isBrick(Utils.trunc((this.x - 9) / 32), Utils.trunc((this.y - 24) / 16))
-            && !this.map.isBrick(Utils.trunc((this.x - 9) / 32), Utils.trunc((this.y - 8) / 16))
-
-            || this.map.isBrick(Utils.trunc((this.x + 9) / 32), Utils.trunc((this.y - 24) / 16))
-            && !this.map.isBrick(Utils.trunc((this.x + 9) / 32), Utils.trunc((this.y - 8) / 16));
-    }
+    // The brick checks below are evaluated on every call with the current coordinates, exactly like
+    // IsOnground(), BrickOnHead() and BrickCrouchOnHead() in NFK (Demo.js assigns x/y directly)
 
     isOnGround() {
-        return this.cacheOnGround;
+        var z = this.dead > 0 ? 0 : 9; // corpses do not stick to walls
+        return this.map.isBlock(Utils.trunc((this.x - z) / 32), Utils.trunc((this.y + 25) / 16))
+            && !this.map.isBlock(Utils.trunc((this.x - z) / 32), Utils.trunc((this.y + 23) / 16))
+
+            || this.map.isBlock(Utils.trunc((this.x + z) / 32), Utils.trunc((this.y + 25) / 16))
+            && !this.map.isBlock(Utils.trunc((this.x + z) / 32), Utils.trunc((this.y + 23) / 16))
+
+            || this.map.isBlock(Utils.trunc((this.x - z) / 32), Utils.trunc((this.y + 24) / 16))
+            && !this.map.isBlock(Utils.trunc((this.x - z) / 32), Utils.trunc((this.y + 8) / 16))
+
+            || this.map.isBlock(Utils.trunc((this.x + z) / 32), Utils.trunc((this.y + 24) / 16))
+            && !this.map.isBlock(Utils.trunc((this.x + z) / 32), Utils.trunc((this.y + 8) / 16));
     }
 
     isBrickOnHead() {
-        return this.cacheBrickOnHead;
+        return this.map.isBlock(Utils.trunc((this.x - 9) / 32), Utils.trunc((this.y - 25) / 16))
+            && !this.map.isBlock(Utils.trunc((this.x - 9) / 32), Utils.trunc((this.y - 23) / 16))
+
+            || this.map.isBlock(Utils.trunc((this.x + 9) / 32), Utils.trunc((this.y - 25) / 16))
+            && !this.map.isBlock(Utils.trunc((this.x + 9) / 32), Utils.trunc((this.y - 23) / 16))
+
+            || this.map.isBlock(Utils.trunc((this.x - 9) / 32), Utils.trunc((this.y - 24) / 16))
+            && !this.map.isBlock(Utils.trunc((this.x - 9) / 32), Utils.trunc((this.y - 8) / 16))
+
+            || this.map.isBlock(Utils.trunc((this.x + 9) / 32), Utils.trunc((this.y - 24) / 16))
+            && !this.map.isBlock(Utils.trunc((this.x + 9) / 32), Utils.trunc((this.y - 8) / 16));
     }
 
     isBrickCrouchOnHead() {
-        return this.cacheBrickCrouchOnHead;
+        return this.map.isBlock(Utils.trunc((this.x - 8) / 32), Utils.trunc((this.y - 9) / 16))
+            && !this.map.isBlock(Utils.trunc((this.x - 8) / 32), Utils.trunc((this.y - 7) / 16))
+
+            || this.map.isBlock(Utils.trunc((this.x + 8) / 32), Utils.trunc((this.y - 9) / 16))
+            && !this.map.isBlock(Utils.trunc((this.x + 8) / 32), Utils.trunc((this.y - 7) / 16))
+
+            || this.map.isBlock(Utils.trunc((this.x - 8) / 32), Utils.trunc((this.y - 23) / 16))
+
+            || this.map.isBlock(Utils.trunc((this.x + 8) / 32), Utils.trunc((this.y - 23) / 16))
+
+            || this.map.isBlock(Utils.trunc((this.x - 8) / 32), Utils.trunc((this.y - 16) / 16))
+
+            || this.map.isBlock(Utils.trunc((this.x + 8) / 32), Utils.trunc((this.y - 16) / 16));
+    }
+
+    isInWater() {
+        return this.map.isWater(Utils.trunc(this.x / 32), Utils.trunc(this.y / 16));
     }
 	
 	destroy() {
