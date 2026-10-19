@@ -3,88 +3,64 @@ import Constants from "../Constants.js";
 import Sound from "./../Sound.js";
 import PIXI from "PIXI";
 
+// Button of a map. In a demo it is pressed and released only by DDEMO_OBJCHANGESTATE like in NFK,
+// the coloured light fades in and out by 15 of 255 per tick.
 export default
 class Button extends SpecialObject {
 	constructor(g, x, y, obj) {
 		super(g, x, y);
 
-		this.texture = g.resources.button.texture.clone();
 		this.BTN_DISABLED = 6;
-		this.disableButton(true);
+		this.texture = this.frameTexture(this.BTN_DISABLED);
+		this.offsetX = 4;
+		this.offsetY = -4;
 
 		// button properties
-		this.orient = obj.orient;
-		this.wait = obj.wait;
-		this.target = obj.target;
-		this.shootable = obj.shootable;
-
-		this.enabled = false;
-		this.targetObjs = [];
+		this.orient = obj.orient; // colour
+		this.pressed = 0;
+		this.nowanim = 0;
 	}
 
+	frameTexture(frame) {
+		var texture = this.g.resources.button.texture.clone();
+		texture.frame = new PIXI.Rectangle(frame * 24, 0, 24, 24);
+		return texture;
+	}
+
+	spawn() {
+		super.spawn();
+		this.light = new PIXI.Sprite(this.frameTexture(this.orient));
+		this.light.x = this.sprite.x;
+		this.light.y = this.sprite.y;
+		this.container.addChild(this.light);
+		this.tick();
+	}
+
+	// the button is controlled by the demo, not by players
 	handleCollisions(player) {
-		var that = this;
-		super.handleCollisions(player, function(player){
-			// TODO: handle collisions and trigger door activations
-
-			that.findTargets(function(target){
-				// do not handle if already activated
-				if (target.enabled && that.enabled)
-					return;
-				that.enableButton();
-				
-				target.delayed_action(player, function(){
-					// disable button on complete
-					that.disableButton();
-				});
-			});
-
-
-			return false;
-		});
+		return false;
 	}
 
-	enableButton(force) {
-		if (this.enabled && !force)
+	// DDEMO_OBJCHANGESTATE
+	setState(state) {
+		if (this.pressed == state)
 			return;
-		Sound.play("button");
-		this.enabled = true;
-		this._switchButton(this.orient);
-		//console.log("button enabled", this.target);
-	}
-	disableButton(force) {
-		if (!this.enabled && !force)
-			return;
-		this.enabled = false;
-		this._switchButton(this.BTN_DISABLED);
-		//console.log("button disabled", this.target);
-	}
-	_switchButton(type) {
-		this.texture.frame = new PIXI.Rectangle(
-			type * 24,
-			0, 
-			24, 
-			24);
+		this.pressed = state;
+		if (state == 1)
+			Sound.play("button");
 	}
 
-	/* exec callback for each target */
-	findTargets(callback) {
-		if (this.targetObjs.length) {
-			if (callback) {
-				this.targetObjs.forEach(function(target){
-					callback(target);
-				})
-			}
-			return this.targetObjs;
-		}
+	tick() {
+		if (this.pressed == 0 && this.nowanim > 0)
+			this.nowanim -= 15;
+		if (this.pressed == 1 && this.nowanim < 0xFF)
+			this.nowanim += 15;
+		this.sprite.alpha = (0xFF - this.nowanim) / 0xFF;
+		this.light.alpha = this.nowanim / 0xFF;
+	}
 
-		// find target and cache result
-		for (var i = 0; i < this.g.objects.length; i++) {
-			var entry = this.g.objects[i];
-			if (entry.targetname == this.target) {
-				this.targetObjs.push(entry);
-			}
-		}
-		return this.findTargets(callback);
+	destroy() {
+		this.container.removeChild(this.light);
+		super.destroy();
 	}
 }

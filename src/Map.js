@@ -42,6 +42,8 @@ class Map {
 		this.brickObjects = []; // array of brick objects (for easier iteration)
 
 		this.specialObjects = [];
+		this.specialInstances = []; // objects of specialObjects by the index (ddd[] in NFK)
+		this.doorBlocks = {}; // bricks of closed doors
 		this.respawns = [];
 		this.bg = 1; // background id
 		
@@ -178,14 +180,18 @@ class Map {
 			var x_coord = obj.x * Constants.BRICK_WIDTH;
 			var y_coord = obj.y * Constants.BRICK_HEIGHT;
 
+			var instance = null;
 			if (obj.objtype == 1)
-				this.g.objects.push(new Portal(this.g, x_coord, y_coord));
+				instance = new Portal(this.g, x_coord, y_coord);
 			if (obj.objtype == 2)
-				this.g.objects.push(new Button(this.g, x_coord, y_coord, obj));
+				instance = new Button(this.g, x_coord, y_coord, obj);
 			if (obj.objtype == 3)
-				this.g.objects.push(new Door(this.g, x_coord, y_coord, obj));
+				instance = new Door(this.g, x_coord, y_coord, obj);
 			if (obj.objtype == 4)
-				this.g.objects.push(new Trigger(this.g, x_coord, y_coord, obj));
+				instance = new Trigger(this.g, x_coord, y_coord, obj);
+			this.specialInstances[i] = instance;
+			if (instance)
+				this.g.objects.push(instance);
 		}
 		
 		// spawn all objects
@@ -200,6 +206,8 @@ class Map {
 			this.g.objects[i].destroy();
 		}
 		this.g.objects = [];
+		this.specialInstances = [];
+		this.doorBlocks = {};
 		console.log("destroy objects");
 	}
 		
@@ -217,20 +225,34 @@ class Map {
         return row >= this.rows || col >= this.cols || row < 0 || col < 0 || this.bricks[row][col] > 53;
     }
 
-	// solid brick for the player physics (TBrick.block in NFK): bricks, the invisible "empty" brick 37
-	// and the map border, which NFK makes solid on map load
+	// solid brick for the player physics (TBrick.block in NFK): bricks, the invisible "empty" brick 37,
+	// closed doors and the map border, which NFK makes solid on map load
 	isBlock(col, row) {
 		if (col <= 0 || row <= 0 || col >= this.rows - 1 || row >= this.cols - 1)
 			return true;
 		var b = this.bricks[col][row];
-		return b > 53 || b == Constants.IT_EMPTY;
+		return b > 53 || b == Constants.IT_EMPTY || this.doorBlocks[col * 256 + row] === true;
+	}
+
+	setDoorBlock(col, row, closed) {
+		if (closed)
+			this.doorBlocks[col * 256 + row] = true;
+		else
+			delete this.doorBlocks[col * 256 + row];
+	}
+
+	// DDEMO_OBJCHANGESTATE: a door or a button changed its state
+	changeObjectState(index, state) {
+		var obj = this.specialInstances[index];
+		if (obj && obj.setState)
+			obj.setState(state);
 	}
 
 	// solid brick for missiles and traces: TBrick.block, except the invisible "empty" brick 37 (NFK clears it on the border)
 	isShotBlock(col, row) {
 		if (col <= 0 || row <= 0 || col >= this.rows - 1 || row >= this.cols - 1)
 			return true;
-		return this.bricks[col][row] > 53;
+		return this.bricks[col][row] > 53 || this.doorBlocks[col * 256 + row] === true;
 	}
 
 	// water or lava brick (IsWaterContent() in NFK)

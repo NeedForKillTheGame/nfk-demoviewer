@@ -350,6 +350,11 @@ class Demo {
 				break;
 
 			
+			// door opened or closed, button pressed or released
+			case Constants.DDEMO_OBJCHANGESTATE:
+				this.g.map.changeObjectState(demounit.objindex, demounit.state);
+				break;
+
 			// a missile exploded
 			case Constants.DDEMO_KILLOBJECT:
 				this.g.weapons.killObject(demounit);

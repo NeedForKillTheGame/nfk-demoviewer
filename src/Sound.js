@@ -56,6 +56,8 @@ var sound_defs = {
 	matchstart:	new Howl({ urls: ['sounds/fight.wav'] }),
 
 	button:	new Howl({ urls: ['sounds/button.wav'] }),
+	door_open:	new Howl({ urls: ['sounds/DR1_STRT.WAV'] }),
+	door_close:	new Howl({ urls: ['sounds/DR1_END.WAV'] }),
 	
 	model_sound_path: 'sound/models/', // with slash at the end
 

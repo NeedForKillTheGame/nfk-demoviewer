@@ -109,6 +109,12 @@ async function init()
 			}
 		}
 
+		// doors and buttons (MAPOBJ_think)
+		for (var k = 0; k < G.objects.length; k++) {
+			if (G.objects[k].tick)
+				G.objects[k].tick();
+		}
+
 		G.weapons.removeDead();
 		G.weapons.tick(0);
 		for (var i = 0; i < G.players.length; i++) {
