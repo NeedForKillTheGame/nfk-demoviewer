@@ -37,7 +37,7 @@ class Demo {
 		if (!demoUrl) {
 			alert('demourl or match is required');
 		}
-		demoUrl = this.g.config.demoServiceUrl + demoUrl + '&type=full';
+		demoUrl = this.g.config.demoServiceUrl + demoUrl;
 		Console.writeText('loading demo from url ' + demoUrl);
 		this.load(demoUrl, callback);
 	}

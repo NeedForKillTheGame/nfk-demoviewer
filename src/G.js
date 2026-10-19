@@ -42,7 +42,7 @@ class Global {
 
 		
 		this.config = {
-			demoServiceUrl: 'https://nfk.harpywar.com/demoparser/demo?url=',
+			demoServiceUrl: 'https://nfk.harpywar.com/demoparser/demo?type=full&url=',
 			statsDemoUrl: 'https://stats.needforkill.ru/demo/', 
 			mode: process.env.NODE_ENV, // 'devemopment' or 'production', depends on running enviroment
 			volume: 0.1,
